@@ -29,12 +29,16 @@ io.on('connection', socket => {
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
     socket.on('disconnect', () => {
-        io.emit('message', formatMessage(serverName,'User has left The Game (but we dont know if he will return)')); 
+        const user = getCurrentUser(socket.id);
+        
+        io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`)); 
     });
     
     // Listen for chatMessages
     socket.on('chatMessage', (msg) => {
-        io.emit('message', formatMessage('USER', msg));
+        const user = getCurrentUser(socket.id);
+        
+        io.to(user.room).emit('message', formatMessage(user.username, msg));
     });
 });
 
