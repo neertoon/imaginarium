@@ -13,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Run when client connect 
 io.on('connection', socket => {
     console.log('New web socket connection...');
+    
+    socket.emit('message', 'Welcome to The Game');
 });
 
 const PORT = 3000 || process.env.PORT;
