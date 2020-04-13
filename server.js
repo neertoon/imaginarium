@@ -3,6 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
+const { userJoin, getCurrentUser } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -15,10 +16,16 @@ const serverName = 'SERVER';
 
 // Run when client connect 
 io.on('connection', socket => {
-    socket.emit('message', formatMessage(serverName, 'Welcome to The Game'));
-    
-    // Broadcast when user connect
-    socket.broadcast.emit('message', formatMessage(serverName, 'The user joined The Game'));
+    socket.on('joinRoom', ({ username, room }) => {
+        const user = userJoin(socket.id, username, room);
+        
+        socket.join(user.room);
+        
+        socket.emit('message', formatMessage(serverName, 'Welcome to The Game'));
+
+        // Broadcast when user connect
+        socket.broadcast.to(user.room).emit('message', formatMessage(serverName, `${user.username} joined The Game`));  
+    });
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
     socket.on('disconnect', () => {
