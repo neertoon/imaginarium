@@ -25,6 +25,11 @@ io.on('connection', socket => {
 
         // Broadcast when user connect
         socket.broadcast.to(user.room).emit('message', formatMessage(serverName, `${user.username} joined The Game`));  
+        
+        io.to(user.room).emit('roomUsers', {
+            room: user.room,
+            users: getRoomUsers(user.room)
+        });
     });
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
@@ -32,7 +37,12 @@ io.on('connection', socket => {
         const user = userLeave(socket.id);
         
         if (user) {
-            io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));   
+            io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
+
+            io.to(user.room).emit('roomUsers', {
+                room: user.room,
+                users: getRoomUsers(user.room)
+            });
         } 
     });
     
