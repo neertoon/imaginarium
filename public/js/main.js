@@ -59,3 +59,10 @@ function outputUsers(users) {
         ${users.map(user => `<li>${user.username}</li>`).join('')}
     `;
 }
+
+const Game = {
+    start : function(event) {
+        event.preventDefault();
+        socket.emit('gameUserReady', 'ok');
+    }    
+};

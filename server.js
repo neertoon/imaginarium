@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers, setReadyForUser } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -51,6 +51,17 @@ io.on('connection', socket => {
         const user = getCurrentUser(socket.id);
         
         io.to(user.room).emit('message', formatMessage(user.username, msg));
+    });
+    
+    // Listen for game join
+    socket.on('gameUserReady', (msg) => {
+        const user = getCurrentUser(socket.id);
+        const users = getRoomUsers(user.room);
+        setReadyForUser(socket.id);
+        
+        
+        console.log('START GAME BY'); 
+        console.log(users); 
     });
 });
 

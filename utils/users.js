@@ -4,7 +4,8 @@ function userJoin(id, username, room) {
     const user = {
         id, 
         username, 
-        room  
+        room,
+        isReady : false
     };
     
     users.push(user);
@@ -28,4 +29,9 @@ function getRoomUsers(room) {
     return users.filter(user => user.room === room);
 }
 
-module.exports = { userJoin, getCurrentUser, userLeave, getRoomUsers };
+function setReadyForUser(id) {
+    let index = users.findIndex(user => user.id === id);
+    users[index].isReady = true;
+}
+
+module.exports = { userJoin, getCurrentUser, userLeave, getRoomUsers, setReadyForUser };
