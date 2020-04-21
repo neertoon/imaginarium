@@ -67,7 +67,7 @@ io.on('connection', socket => {
         const userThatAgreed = users.filter(user => user.isReady === true);
         
         if (users.length === userThatAgreed.length) {
-            console.log('Wszyscy sie zgodzili');
+            io.to(user.room).emit('phase', 'selectCard');
         }
         
         

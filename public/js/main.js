@@ -34,6 +34,13 @@ socket.on('gameError', message => {
     window.location = '/';
 });
 
+socket.on('phase', message => {
+    if (message == 'selectCard') {
+        $('#btnSetReady').hide();
+        $('#btnChooseCard').show();
+    }
+});
+
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
@@ -70,5 +77,9 @@ const Game = {
     start : function(event) {
         event.preventDefault();
         socket.emit('gameUserReady', 'ok');
-    }    
+    },
+    selectCard : function(event) {
+        event.preventDefault();
+        console.log('You selected card');
+    }
 };
