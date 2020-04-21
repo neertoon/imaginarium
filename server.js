@@ -18,6 +18,11 @@ const serverName = 'SERVER';
 io.on('connection', socket => {
     socket.on('joinRoom', ({ username, room }) => {
         const user = userJoin(socket.id, username, room);
+        const users = getRoomUsers(room);
+        
+        if (users.length > 0 && users[0].isReady) {
+            socket.emit('gameError', formatMessage(serverName, 'CantJoin'));
+        } 
         
         socket.join(user.room);
         
@@ -58,6 +63,12 @@ io.on('connection', socket => {
         const user = getCurrentUser(socket.id);
         const users = getRoomUsers(user.room);
         setReadyForUser(socket.id);
+
+        const userThatAgreed = users.filter(user => user.isReady === true);
+        
+        if (users.length === userThatAgreed.length) {
+            console.log('Wszyscy sie zgodzili');
+        }
         
         
         console.log('START GAME BY'); 

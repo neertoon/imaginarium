@@ -28,6 +28,12 @@ socket.on('message', message => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 });
 
+socket.on('gameError', message => {
+    console.log(message.text);
+    alert(message.text);
+    window.location = '/';
+});
+
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
