@@ -1,11 +1,15 @@
 const users = [];
 
 function userJoin(id, username, room) {
+    const roomUser = getRoomUsers(room);
+    
     const user = {
         id, 
         username, 
         room,
-        isReady : false
+        isReady : false,
+        points: 0,
+        isHost: roomUser.length === 0
     };
     
     users.push(user);
