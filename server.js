@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers, setReadyForUser } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers, switchReadyForUser } = require('./utils/users');
 
 const app = express();
 const server = http.createServer(app);
@@ -60,9 +60,15 @@ io.on('connection', socket => {
     
     // Listen for game join
     socket.on('gameUserReady', (msg) => {
+        switchReadyForUser(socket.id);
         const user = getCurrentUser(socket.id);
         const users = getRoomUsers(user.room);
-        setReadyForUser(socket.id);
+
+        if (user.isReady) {
+            socket.emit('phase', 'readyOn');
+        } else {
+            socket.emit('phase', 'readyOff');
+        }
 
         const userThatAgreed = users.filter(user => user.isReady === true);
         

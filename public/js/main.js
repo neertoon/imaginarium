@@ -38,6 +38,10 @@ socket.on('phase', message => {
     if (message == 'selectCard') {
         $('#btnSetReady').hide();
         $('#btnChooseCard').show();
+    } else if (message == 'readyOn') {
+        $('#btnSetReady').css('background-color', '#5cb85c');
+    } else if (message == 'readyOff') {
+        $('#btnSetReady').css('background-color', 'darksalmon');
     }
 });
 

@@ -33,9 +33,9 @@ function getRoomUsers(room) {
     return users.filter(user => user.room === room);
 }
 
-function setReadyForUser(id) {
+function switchReadyForUser(id) {
     let index = users.findIndex(user => user.id === id);
-    users[index].isReady = true;
+    users[index].isReady = !(users[index].isReady);
 }
 
-module.exports = { userJoin, getCurrentUser, userLeave, getRoomUsers, setReadyForUser };
+module.exports = { userJoin, getCurrentUser, userLeave, getRoomUsers, switchReadyForUser };
