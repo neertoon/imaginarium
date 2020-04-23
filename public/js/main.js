@@ -82,8 +82,10 @@ const Game = {
         event.preventDefault();
         socket.emit('gameUserReady', 'ok');
     },
-    selectCard : function(event) {
+    selectCard : function(event, cardNumber) {
         event.preventDefault();
-        console.log('You selected card');
+        socket.emit('gamePickCard', cardNumber);
+        console.log('You selected card '+cardNumber);
+        var element = $(event.target);
     }
 };

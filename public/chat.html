@@ -12,7 +12,7 @@
     <header class="chat-header">
       <h1><i class="fas fa-smile"></i> ChatCord</h1>
         <a id="btnSetReady" href="" class="btn" onclick="Game.start(event)" style="background-color: darksalmon; color: white;">Set ready</a>
-        <a id="btnChooseCard" href="" class="btn" onclick="Game.selectCard(event)" style="display: none">Choose card</a>
+        <a id="btnChooseCard" href="" class="btn" onclick="Game.selectCard(event, $('#msg').val())" style="display: none">Choose card</a>
         <a href="index.html" class="btn">Leave Room</a>
     </header>
     <main class="chat-main">
