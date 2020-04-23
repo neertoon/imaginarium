@@ -3,7 +3,8 @@ const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
-const { userJoin, getCurrentUser, userLeave, getRoomUsers, switchReadyForUser } = require('./utils/users');
+const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
+const GamesData = require('./utils/games');
 
 const app = express();
 const server = http.createServer(app);
@@ -17,12 +18,15 @@ const serverName = 'SERVER';
 // Run when client connect 
 io.on('connection', socket => {
     socket.on('joinRoom', ({ username, room }) => {
-        const user = userJoin(socket.id, username, room);
-        const users = getRoomUsers(room);
+        if (!GamesData.canJoin(room)) {
+            socket.emit('gameError', formatMessage(serverName, 'CantJoinDude'));
+            return;
+        }
         
-        if (users.length > 0 && users[0].isReady) {
-            socket.emit('gameError', formatMessage(serverName, 'CantJoin'));
-        } 
+        const user = userJoin(socket.id, username, room);
+        
+        GamesData.createGame(room);
+        GamesData.addPlayer(room, user); 
         
         socket.join(user.room);
         
@@ -60,25 +64,14 @@ io.on('connection', socket => {
     
     // Listen for game join
     socket.on('gameUserReady', (msg) => {
-        switchReadyForUser(socket.id);
         const user = getCurrentUser(socket.id);
-        const users = getRoomUsers(user.room);
+        GamesData.handleReadiness(user, io);
 
         if (user.isReady) {
             socket.emit('phase', 'readyOn');
         } else {
             socket.emit('phase', 'readyOff');
         }
-
-        const userThatAgreed = users.filter(user => user.isReady === true);
-        
-        if (users.length === userThatAgreed.length) {
-            io.to(user.room).emit('phase', 'selectCard');
-        }
-        
-        
-        console.log('START GAME BY'); 
-        console.log(users); 
     });
 });
 
