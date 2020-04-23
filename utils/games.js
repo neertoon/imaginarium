@@ -2,9 +2,9 @@ var games = [];
 
 var GamesData = {
     games: [],
-    phaseJoining: 'joining',
-    phaseSettingReady: 'settingReady',
-    phasePickingCard: 'pickingCard',
+    phaseJoining: 1,
+    phaseSettingReady: 2,
+    phasePickingCard: 3,
     
     createGame: function(room) {
         const index = games.findIndex(game => game.room === room);
@@ -36,10 +36,15 @@ var GamesData = {
     },
     
     handleReadiness: function(user, io) {
-        user.isReady = !(user.isReady);
         const room = user.room;
         
         const index = games.findIndex(game => game.room === room);
+        
+        if (games[index].phase >= this.phasePickingCard) {
+            return false;
+        }
+
+        user.isReady = !(user.isReady);
         
         const userHost = games[index].players.filter(user => user.id === games[index].hostId)[0];
         
@@ -56,6 +61,8 @@ var GamesData = {
             
             games[index].phase = this.phasePickingCard;
         }
+        
+        return true;
     },
     
     canJoin: function(room) {
