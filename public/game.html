@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/game.css">
   <title>The GAME</title>
 </head>
 <body>
-  <div class="chat-container">
+  <div class="chat-container" style="display: none">
     <header class="chat-header">
       <h1><i class="fas fa-smile"></i> ChatCord</h1>
-        <a id="btnSetReady" href="" class="btn" onclick="Game.start(event)" style="background-color: darksalmon; color: white;">Set ready</a>
-        <a id="btnChooseCard" href="" class="btn" onclick="Game.selectCard(event, $('#msg').val())" style="display: none">Choose card</a>
+        
         <a href="index.html" class="btn">Leave Room</a>
     </header>
     <main class="chat-main">
@@ -38,8 +39,53 @@
     </div>
   </div>
 
+  <div class="container-fluid">
+      <div class="imaginarium-menu col-sm-12">
+          
+      </div>
+
+      <div class="imaginarium-game col-sm-12">
+          <!--
+          <i class="f-question-1 fas fa-question"></i>
+          <i class="f-question-2 fas fa-question"></i>
+          <i class="f-question-3 fas fa-question"></i>
+          <i class="f-question-4 fas fa-question"></i>
+          <i class="f-question-5 fas fa-question"></i>
+          <i class="f-question-6 fas fa-question"></i>
+          <i class="f-question-7 fas fa-question"></i>
+          <i class="f-question-8 fas fa-question"></i>
+          <i class="f-question-9 fas fa-question"></i>
+          <i class="f-question-10 fas fa-question"></i>
+          <i class="f-question-11 fas fa-question"></i>
+          <i class="f-question-12 fas fa-question"></i>
+          <i class="f-question-13 fas fa-question"></i>
+          <i class="f-question-14 fas fa-question"></i>
+          <i class="f-question-15 fas fa-question"></i>
+          <i class="f-question-16 fas fa-question"></i>
+          <i class="f-question-17 fas fa-question"></i>
+          <i class="f-question-18 fas fa-question"></i>
+
+          <i class="f-unlock-1 fas fa-unlock-alt"></i>
+          <i class="f-unlock-2 fas fa-unlock-alt"></i>
+          <i class="f-unlock-3 fas fa-unlock-alt"></i>
+          <i class="f-unlock-4 fas fa-unlock-alt"></i>
+          <i class="f-unlock-5 fas fa-unlock-alt"></i>
+          <i class="f-unlock-6 fas fa-unlock-alt"></i>
+
+          <i class="f-eye-1 fas fa-eye"></i>
+          -->
+      </div>
+
+      <div class="imaginarium-actions col-sm-12">
+          <a id="btnSetReady" href="" class="btn btn-action-bottom" onclick="Game.start(event)" style="background-color: rgba(228, 234, 123, 1); color: rgba(82, 82, 82, 1);">Set ready</a>
+          <a id="btnChooseCard" href="" class="btn btn-action-bottom" onclick="Game.selectCard(event, $('#msg').val())" style="display: none; background-color: orange; color: white">Choose card</a>
+      </div>
+  </div>
+
   <script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.3/qs.min.js" integrity="sha256-lSPkSu/D04IeqWOhTgTf5tLzNFEc37oNE9ysGS9PdK4=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/main.js"></script>
 </body>
