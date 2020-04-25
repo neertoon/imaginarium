@@ -84,7 +84,8 @@ var GamesData = {
     },
     
     addCardForVoting: function(user, cardIndex, io) {
-        const game = games.find(game => game.room === user.room);
+        const room = user.room; 
+        const game = games.find(game => game.room === room);
         
         game.cardsForVoting.push(user.cards[cardIndex]);
         
