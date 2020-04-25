@@ -5,6 +5,7 @@ var GamesData = {
     phaseJoining: 1,
     phaseSettingReady: 2,
     phasePickingCard: 3,
+    phaseVoting: 4,
     
     createGame: function(room) {
         const index = games.findIndex(game => game.room === room);
@@ -88,6 +89,14 @@ var GamesData = {
         game.cardsForVoting.push(user.cards[cardIndex]);
         
         user.selectedCard = true;
+
+        const userThatPickedCard = game.players.filter(user => user.selectedCard === true);
+
+        if (game.players.length === userThatPickedCard.length && game.phase === this.phasePickingCard) {
+            io.to(room).emit('phase', 'voting');
+            
+            game.phase = this.phaseVoting;
+        }
     }
 }
 
