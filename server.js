@@ -75,6 +75,11 @@ io.on('connection', socket => {
             socket.emit('phase', 'readyOff');
         }
     });
+    
+    socket.on('gamePickCard', (cardIndex) => {
+        const user = getCurrentUser(socket.id);
+        GamesData.addCardForVoting(user, cardIndex);
+    });
 });
 
 const PORT = 3000 || process.env.PORT;

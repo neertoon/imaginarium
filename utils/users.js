@@ -8,6 +8,7 @@ function userJoin(id, username, room) {
         username, 
         room,
         isReady : false,
+        selectedCard: false,
         points: 0,
         isHost: roomUser.length === 0,
         cards: []
