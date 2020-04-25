@@ -9,7 +9,8 @@ function userJoin(id, username, room) {
         room,
         isReady : false,
         points: 0,
-        isHost: roomUser.length === 0
+        isHost: roomUser.length === 0,
+        cards: []
     };
     
     users.push(user);
