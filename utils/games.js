@@ -83,7 +83,7 @@ var GamesData = {
         return games[index].phase == this.phaseJoining;
     },
     
-    addCardForVoting: function(user, cardIndex) {
+    addCardForVoting: function(user, cardIndex, io) {
         const game = games.find(game => game.room === user.room);
         
         game.cardsForVoting.push(user.cards[cardIndex]);
