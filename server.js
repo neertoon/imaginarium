@@ -63,9 +63,9 @@ io.on('connection', socket => {
     });
     
     // Listen for game join
-    socket.on('gameUserReady', (msg) => {
+    socket.on('gameUserReady', async (msg) => {
         const user = getCurrentUser(socket.id);
-        if (!GamesData.handleReadiness(user, io)) {
+        if (await !GamesData.handleReadiness(user, io)) {
             socket.emit('gameError', formatMessage(serverName, 'Cannot change ready state during game'));
         }
 

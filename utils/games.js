@@ -1,5 +1,12 @@
 var games = [];
-const loadTempCards = require('./temp_cards');
+const fs = require('fs');
+const imagesPath = 'utils/cardImages/';
+
+const path = require('path');
+const util = require('util');
+const readFile = util.promisify(fs.readFile);
+
+
 var GamesData = {
     games: [],
     phaseJoining: 1,
@@ -24,7 +31,7 @@ var GamesData = {
             cardsForVoting: []
         };
 
-        game.cardsToUse = loadTempCards();
+        game.cardsToUse = this.loadCardsListFromDirectory();
 
         games.push(game);
     
@@ -41,7 +48,7 @@ var GamesData = {
         game.players.push(user);
     },
     
-    handleReadiness: function(user, io) {
+    handleReadiness: async function(user, io) {
         const room = user.room;
         
         const index = games.findIndex(game => game.room === room);
@@ -71,9 +78,11 @@ var GamesData = {
             for(let player of game.players)
             {
                 let cardsList = player.cards
-                while(cardsList.length < 3)//tymczasowo trzy karty
+                while(cardsList.length < 6)
                 {
-                    cardsList.push(game.cardsToUse[0]);
+                    
+                    const basedImage = await this.imagePathToBase64(imagesPath + game.cardsToUse[0]);
+                    cardsList.push(basedImage);
                     game.cardsToUse.shift();
                 }
             }
@@ -115,6 +124,33 @@ var GamesData = {
                 io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
             }
         }
+    },
+
+    loadCardsListFromDirectory: function() {
+        const result = [];
+        fs.readdir(imagesPath, function (err, files) {
+            //handling error
+            if (err) {
+                return console.log('Unable to scan directory: ' + err);
+            } 
+            files.forEach(function (file) {
+                result.push(file); 
+            });
+        });
+        return result;
+    },
+
+    imagePathToBase64: async function(filePath){
+        let result;
+        let data = await readFile(filePath);
+           
+       let extensionName = path.extname(filePath);
+       
+       let base64Image = Buffer.from(data, 'binary').toString('base64');
+       
+       result = `data:image/${extensionName.slice(1)};base64,${base64Image}`;
+       
+       return result;
     }
 }
 

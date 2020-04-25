@@ -52,7 +52,7 @@ socket.on('gameCardsPack', cardsPack => {
     console.log(cardsPack);
     $('#player-cards').empty();
     cardsPack.forEach((card)=>{
-        $('#player-cards').append(`<img src="${card.content}"/>`);
+        $('#player-cards').append(`<img src="${card}"/>`);
     });
 });
 
