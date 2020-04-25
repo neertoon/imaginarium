@@ -77,6 +77,9 @@ io.on('connection', socket => {
     });
     
     socket.on('gamePickCard', (cardIndex) => {
+        if (!cardIndex && cardIndex !== 0) {
+            socket.emit('gameError', formatMessage(serverName, "You didn't choose anything"));
+        }
         const user = getCurrentUser(socket.id);
         GamesData.addCardForVoting(user, cardIndex);
     });
