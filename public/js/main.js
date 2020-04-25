@@ -42,7 +42,10 @@ socket.on('phase', message => {
         $('#btnSetReady').css('background-color', '#5cb85c');
     } else if (message == 'readyOff') {
         $('#btnSetReady').css('background-color', 'darksalmon');
-    }
+    } else if (message == 'voting') {
+        $('#btnChooseCard').hide();
+        $('#btnVoteForCard').show();
+    } 
 });
 
 chatForm.addEventListener('submit', (e) => {
@@ -83,9 +86,13 @@ const Game = {
         socket.emit('gameUserReady', 'ok');
     },
     selectCard : function(event, cardNumber) {
+        cardNumber = 0;
         event.preventDefault();
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
         var element = $(event.target);
+    },
+    voteForCard : function(event, cardNumber) {
+        
     }
 };
