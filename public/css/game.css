@@ -78,6 +78,70 @@ body {
     transform: translate(-50%, 0px);
 }
 
+#game-users-area {
+    padding: 0;
+    background-color: #673540;
+    text-align: center;
+}
+
+#game-users-area h2 {
+    color: #f3f642;
+    margin: 0;
+    padding: 10px;
+}
+
+#game-users-area table {
+    text-align: left;
+    color: black;
+    width: 100%;
+}
+
+#game-users-area table tr {
+    color: black;
+    border-top: 2px solid #592333;
+    background-color: #994964;
+}
+
+#game-users-area table tr:nth-child(odd) {
+    background-color: #673540;
+}
+
+#game-users-area table td {
+    padding: 10px;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: #f3f642;
+}
+
+#game-users-area table td .fa-check-circle {
+    color: chartreuse;
+}
+
+#game-users-area table td:last-child {
+    font-size: 24px;
+}
+
+@media (max-width: 768px) {
+    #game-users-area {
+        /*display: block !important;*/
+        position: absolute;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        width: 80vw;
+        border-top-left-radius: 15px;
+        border-bottom-left-radius: 15px;
+        -webkit-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
+        -moz-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
+        box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
+    }
+
+    #game-users-area table {
+        border-top-left-radius: 15px;
+    }
+}
+
+
 .f-question-1 {
     font-size: 36px;
     position: absolute;
