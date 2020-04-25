@@ -91,6 +91,7 @@ const Game = {
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
         var element = $(event.target);
+        element.hide();
     },
     voteForCard : function(event, cardNumber) {
         
