@@ -63,6 +63,9 @@ var GamesData = {
             
             game.phase = this.phasePickingCard;
 
+            for (const playerIndex of game.players){
+                io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+            }
         }
         
         return true;
