@@ -96,6 +96,10 @@ var GamesData = {
             io.to(room).emit('phase', 'voting');
             
             game.phase = this.phaseVoting;
+
+            for (const playerIndex of game.players){
+                io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
+            }
         }
     }
 }
