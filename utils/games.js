@@ -19,7 +19,8 @@ var GamesData = {
             cardsToUse: [],
             usedCards: [],
             players: [],
-            hostId: -1
+            hostId: -1,
+            cardsForVoting: []
         };
 
         games.push(game);
