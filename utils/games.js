@@ -1,5 +1,5 @@
 var games = [];
-
+const loadTempCards = require('./temp_cards');
 var GamesData = {
     games: [],
     phaseJoining: 1,
@@ -23,6 +23,8 @@ var GamesData = {
             hostId: -1,
             cardsForVoting: []
         };
+
+        game.cardsToUse = loadTempCards();
 
         games.push(game);
     
@@ -65,9 +67,20 @@ var GamesData = {
             
             game.phase = this.phasePickingCard;
 
-            for (const playerIndex of game.players){
-                io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+
+            for(let player of game.players)
+            {
+                let cardsList = player.cards
+                while(cardsList.length < 3)//tymczasowo trzy karty
+                {
+                    cardsList.push(game.cardsToUse[0]);
+                    game.cardsToUse.shift();
+                }
             }
+
+            for (const playerIndex of game.players)
+                io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+            
         }
         
         return true;
@@ -113,4 +126,5 @@ Do zorbiniea:
 Nie można wybrać karty, gdy już wybrano kartę albo inna faza gry
 To samo z głosowaniem
 Kontroluj niewłaściwe wartości przychodzące
+ */
  */

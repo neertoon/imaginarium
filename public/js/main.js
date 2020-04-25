@@ -48,6 +48,14 @@ socket.on('phase', message => {
     } 
 });
 
+socket.on('gameCardsPack', cardsPack => {
+    console.log(cardsPack);
+    $('#player-cards').empty();
+    cardsPack.forEach((card)=>{
+        $('#player-cards').append(`<img src="${card.content}"/>`);
+    });
+});
+
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
     
