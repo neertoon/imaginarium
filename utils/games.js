@@ -16,6 +16,8 @@ var GamesData = {
         const game = {
             room,
             phase: this.phaseJoining,
+            cardsToUse: [],
+            usedCards: [],
             players: [],
             hostId: -1
         };
@@ -27,39 +29,40 @@ var GamesData = {
     
     addPlayer: function(room, user) {
         const index = games.findIndex(game => game.room === room);
-        
-        if (games[index].players.length == 0) {
-            games[index].hostId = user.id;    
+        let game = games[index];
+        if (game.players.length == 0) {
+            game.hostId = user.id;    
         }
 
-        games[index].players.push(user);
+        game.players.push(user);
     },
     
     handleReadiness: function(user, io) {
         const room = user.room;
         
         const index = games.findIndex(game => game.room === room);
-        
-        if (games[index].phase >= this.phasePickingCard) {
+        let game = games[index];
+        if (game.phase >= this.phasePickingCard) {
             return false;
         }
 
         user.isReady = !(user.isReady);
         
-        const userHost = games[index].players.filter(user => user.id === games[index].hostId)[0];
+        const userHost = game.players.filter(user => user.id === game.hostId)[0];
         
-        if (userHost.isReady && games[index].phase == this.phaseJoining) {
-            games[index].phase = this.phaseSettingReady;
-        } else if (!userHost.isReady && games[index].phase == this.phaseSettingReady) {
-            games[index].phase = this.phaseJoining;
+        if (userHost.isReady && game.phase == this.phaseJoining) {
+            game.phase = this.phaseSettingReady;
+        } else if (!userHost.isReady && game.phase == this.phaseSettingReady) {
+            game.phase = this.phaseJoining;
         }
         
-        const userThatAgreed = games[index].players.filter(user => user.isReady === true);
+        const userThatAgreed = game.players.filter(user => user.isReady === true);
 
-        if (games[index].players.length === userThatAgreed.length) {
+        if (game.players.length === userThatAgreed.length) {
             io.to(room).emit('phase', 'selectCard');
             
-            games[index].phase = this.phasePickingCard;
+            game.phase = this.phasePickingCard;
+
         }
         
         return true;
