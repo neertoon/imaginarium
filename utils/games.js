@@ -107,3 +107,10 @@ var GamesData = {
 
 
 module.exports = GamesData;
+
+/*
+Do zorbiniea:
+Nie można wybrać karty, gdy już wybrano kartę albo inna faza gry
+To samo z głosowaniem
+Kontroluj niewłaściwe wartości przychodzące
+ */
