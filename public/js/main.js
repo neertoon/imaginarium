@@ -51,14 +51,17 @@ socket.on('phase', message => {
     if (message == 'selectCard') {
         $('#btnSetReady').hide();
         $('#btnChooseCard').show();
+        $('#game-users-title').html('Selecting cards');
     } else if (message == 'readyOn') {
         $('#btnSetReady').css('background-color', '#5cb85c');
     } else if (message == 'readyOff') {
         $('#btnSetReady').css('background-color', 'darksalmon');
     } else if (message == 'voting') {
+        $('#game-users-title').html('Voting');
         $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
+        $('#game-users-title').html('Summary');
         $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
     } else if (message == 'narrator') {
