@@ -76,7 +76,10 @@ io.on('connection', socket => {
     
     socket.on('gamePickCard', (cardIndex) => {
         if (!cardIndex && cardIndex !== 0) {
-            socket.emit('gameWarning', formatMessage(serverName, "You didn't choose anything"));
+            let message = formatMessage(serverName, "You didn't choose anything");
+            message['phase'] = 'selectCard';
+            socket.emit('gameWarning', message);
+            return;
         }
         const user = getCurrentUser(socket.id);
         if (!GamesData.addCardForVoting(user, cardIndex, io)) {

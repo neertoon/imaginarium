@@ -41,6 +41,8 @@ socket.on('gameWarning', message => {
     if (message.hasOwnProperty('phase')) {
         if (message.phase === 'voting') {
             $('#btnVoteForCard').show();
+        } else if (message.phase === 'selectCard') {
+            $('#btnChooseCard').show();
         }
     }
 });
