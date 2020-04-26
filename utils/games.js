@@ -155,12 +155,53 @@ var GamesData = {
 
 
         user.selectedCard = true;
-        user.votedCardIndex = cardIndex;
+        user.votedCardIndex = parseInt(cardIndex);
 
         const usersThatVoted = game.players.filter(user => user.selectedCard === true);
         console.log(user.username+' voted '+cardIndex);
 
         if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
+            console.log('ALL USERS voted ');
+            
+            const storyTeller = game.players.find(user => user.isStoryteller === true);
+            console.log('storyTeller.pickedCardIndex ');
+            console.log(storyTeller.pickedCardIndex);
+            const playersThatFoundStorytellerCard = game.players.filter(userki => userki.votedCardIndex === storyTeller.pickedCardIndex);
+            const playersNotVotedForStoryteller = game.players.filter(userki => userki.votedCardIndex !== storyTeller.pickedCardIndex);
+
+            console.log('playersThatFoundStorytellerCard.length');
+            console.log(playersThatFoundStorytellerCard.length);
+            console.log(game.players.length);
+            // Aha... trzeba jeszcze dorobić, żeby narrator otrzymał od strzzłu głos na swoją kartę. Wtedy 1 warunek musi być na 1 a nie 0
+            // Nie może głosować na siebie
+            if (playersThatFoundStorytellerCard.length === 0 || playersThatFoundStorytellerCard.length === game.players.length) {
+                console.log('LICZYMY 2');
+                for (const player of game.players){
+                    console.log('player.votedCardIndex');
+                    console.log(player.votedCardIndex);
+                    if (player.isStoryteller) {
+                        continue;
+                    }
+                    player.points += 2;
+                }
+            } else {
+                console.log('LICZYMY INACZEJ');
+                for (const player of playersThatFoundStorytellerCard){
+                    player.points += 3;
+                }
+                
+                let playersWithExtaPoints = {};
+                for (const player of playersNotVotedForStoryteller) {
+                    let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === player.votedCardIndex);
+                    if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
+                        playersWithExtaPoints[playerToGetAnotherPoints.id] = 0;
+                    } else if (playersWithExtaPoints[playerToGetAnotherPoints.id] === 3) {
+                        continue;
+                    }
+                    playerToGetAnotherPoints.points += 1;
+                    playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
+                }
+            }
             io.to(room).emit('phase', 'scoring');
 
             game.phase = this.phaseScore;
@@ -172,8 +213,6 @@ var GamesData = {
             //TUTAJ TRZEBA WYSLAC KARTY Z INFORMACJA KTO NA KOGO GLOSOWAL I TRZEBA PUNKTY PODLICZYC
             //BRAKUJE INFO, KTO JEST W TYM ROZADNIU NARATOREM
             // io.to(room).emit('gameCardsPack', game.cardsForVoting);
-
-            console.log('ALL USERS voted ');
         }
 
         return true;
