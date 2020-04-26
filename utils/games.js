@@ -9,6 +9,7 @@ var GamesData = {
     phaseSettingReady: 2,
     phasePickingCard: 3,
     phaseVoting: 4,
+    phaseScore: 5,
     
     createGame: async function(room) {
         const index = games.findIndex(game => game.room === room);
@@ -159,6 +160,39 @@ var GamesData = {
         if (index !== -1) {
             return game.players.splice(index, 1)[0];
         }
+    },
+    voteForCard(user, cardIndex, io) {
+        if (user.votedCardIndex !== -1) {
+            return false;
+        }
+
+        const room = user.room;
+        const game = games.find(game => game.room === room);
+
+
+        user.selectedCard = true;
+        user.votedCardIndex = cardIndex;
+
+        const usersThatVoted = game.players.filter(user => user.selectedCard === true);
+        console.log(user.username+' voted '+cardIndex);
+
+        if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
+            // io.to(room).emit('phase', 'scoring');
+
+            game.phase = this.phaseScore;
+
+            for (const playerIndex of game.players){
+                playerIndex.selectedCard = false;
+            }
+
+            //TUTAJ TRZEBA WYSLAC KARTY Z INFORMACJA KTO NA KOGO GLOSOWAL I TRZEBA PUNKTY PODLICZYC
+            //BRAKUJE INFO, KTO JEST W TYM ROZADNIU NARATOREM
+            // io.to(room).emit('gameCardsPack', game.cardsForVoting);
+
+            console.log('ALL USERS voted ');
+        }
+
+        return true;
     }
 }
 

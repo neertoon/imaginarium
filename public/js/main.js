@@ -119,6 +119,10 @@ const Game = {
         element.hide();
     },
     voteForCard : function(event, cardNumber) {
-        
+        event.preventDefault();
+        socket.emit('gameVote', cardNumber);
+        console.log('You vote card '+cardNumber);
+        var element = $(event.target);
+        element.hide();
     }
 };

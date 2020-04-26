@@ -85,6 +85,18 @@ io.on('connection', socket => {
 
         sendUsers(user, io);
     });
+
+    socket.on('gameVote', (cardIndex) => {
+        if (!cardIndex && cardIndex !== 0) {
+            socket.emit('gameWarning', formatMessage(serverName, "You didn't choose anything"));
+        }
+        const user = getCurrentUser(socket.id);
+        if (!GamesData.voteForCard(user, cardIndex, io)) {
+            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
+        }
+
+        sendUsers(user, io);
+    });
 });
 
 const PORT = 3000 || process.env.PORT;
