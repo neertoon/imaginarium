@@ -93,7 +93,7 @@ function outputUsers(users) {
     userTable.html(`
         ${users.map(user => `<tr>
             <td>${user.username}</td>
-            <td>${user.madeMove}</td>
+            <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}</td>
             <td>${user.points}</td>
         </tr>`).join('')}
     `);
