@@ -208,7 +208,8 @@ var GamesData = {
         var nextStoryTeller = 0;
         if (indexOfStoryTeller !== -1) {
             nextStoryTeller = indexOfStoryTeller + 1;
-            nextStoryTeller = nextStoryTeller === game.players.length ? 0 : nextStoryTeller; 
+            nextStoryTeller = nextStoryTeller === game.players.length ? 0 : nextStoryTeller;
+            game.players[indexOfStoryTeller].isStoryteller = false;
         }
         game.players[nextStoryTeller].isStoryteller = true;
         game.usedCards = game.usedCards.concat(game.cardsForVoting);
