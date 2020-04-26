@@ -53,7 +53,7 @@ socket.on('gameCardsPack', cardsPack => {
     $('#player-cards').empty();
     var i=0;
     cardsPack.forEach((card)=>{
-        $('#player-cards').append(`<img data-index="${i}" onclick="" class="game-card" src="${card}"/>`);
+        $('#player-cards').append(`<img data-index="${i}" onclick="Game.selectCard(event, $('#selected-card-index'))" class="game-card" src="${card}"/>`);
         i++;
     });
 });
@@ -95,8 +95,14 @@ const Game = {
         event.preventDefault();
         socket.emit('gameUserReady', 'ok');
     },
+    selectCard: function(event, cardIndexHolder) {
+        var element = $(event.target);
+        const value = element.data('index');
+        cardIndexHolder.val(value);
+        $('.game-card').removeClass('selected');
+        element.addClass('selected');
+    },
     sendPickedCard : function(event, cardNumber) {
-        cardNumber = 0;
         event.preventDefault();
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
