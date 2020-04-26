@@ -124,8 +124,9 @@ var GamesData = {
 
             for (const playerIndex of game.players){
                 playerIndex.selectedCard = false;
-                io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
             }
+
+            io.to(room).emit('gameCardsPack', game.cardsForVoting);
         }
 
         return true;
