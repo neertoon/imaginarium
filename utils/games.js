@@ -186,7 +186,7 @@ var GamesData = {
             console.log(game.players.length);
             // Aha... trzeba jeszcze dorobić, żeby narrator otrzymał od strzzłu głos na swoją kartę. Wtedy 1 warunek musi być na 1 a nie 0
             // Nie może głosować na siebie
-            if (playersThatFoundStorytellerCard.length === 0 || playersThatFoundStorytellerCard.length === game.players.length) {
+            if (playersThatFoundStorytellerCard.length === 1 || playersThatFoundStorytellerCard.length === game.players.length) {
                 console.log('LICZYMY 2');
                 for (const player of game.players){
                     console.log('player.votedCardIndex');
