@@ -1,11 +1,7 @@
 var games = [];
-const fs = require('fs');
 const imagesPath = 'utils/cardImages/';
-
-const path = require('path');
-const util = require('util');
-const readFile = util.promisify(fs.readFile);
-
+ 
+const {loadCardsListFromDirectory, imagePathToBase64} = require('./images');
 
 var GamesData = {
     games: [],
@@ -31,7 +27,7 @@ var GamesData = {
             cardsForVoting: []
         };
 
-        game.cardsToUse = this.loadCardsListFromDirectory();
+        game.cardsToUse = loadCardsListFromDirectory(imagesPath);
 
         games.push(game);
     
@@ -81,7 +77,7 @@ var GamesData = {
                 while(cardsList.length < 6)
                 {
                     
-                    const basedImage = await this.imagePathToBase64(imagesPath + game.cardsToUse[0]);
+                    const basedImage = await imagePathToBase64(imagesPath + game.cardsToUse[0]);
                     cardsList.push(basedImage);
                     game.cardsToUse.shift();
                 }
@@ -130,34 +126,8 @@ var GamesData = {
                 io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
             }
         }
+
         return true;
-    },
-
-    loadCardsListFromDirectory: function() {
-        const result = [];
-        fs.readdir(imagesPath, function (err, files) {
-            //handling error
-            if (err) {
-                return console.log('Unable to scan directory: ' + err);
-            } 
-            files.forEach(function (file) {
-                result.push(file); 
-            });
-        });
-        return result;
-    },
-
-    imagePathToBase64: async function(filePath){
-        let result;
-        let data = await readFile(filePath);
-           
-       let extensionName = path.extname(filePath);
-       
-       let base64Image = Buffer.from(data, 'binary').toString('base64');
-       
-       result = `data:image/${extensionName.slice(1)};base64,${base64Image}`;
-       
-       return result;
     }
 }
 
