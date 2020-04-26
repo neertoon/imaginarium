@@ -1,7 +1,7 @@
 var games = [];
 const imagesPath = 'utils/cardImages/';
  
-const {loadCardsListFromDirectory, imagePathToBase64} = require('./images');
+const {loadCardsListFromDirectory, imagePathToBase64, shuffle} = require('./cards');
 
 var GamesData = {
     games: [],
@@ -10,7 +10,7 @@ var GamesData = {
     phasePickingCard: 3,
     phaseVoting: 4,
     
-    createGame: function(room) {
+    createGame: async function(room) {
         const index = games.findIndex(game => game.room === room);
         
         if (index !== -1) {
@@ -26,8 +26,9 @@ var GamesData = {
             hostId: -1,
             cardsForVoting: []
         };
-
-        game.cardsToUse = loadCardsListFromDirectory(imagesPath);
+        let cards = await loadCardsListFromDirectory(imagesPath);
+        shuffle(cards);
+        game.cardsToUse = cards;
 
         games.push(game);
     

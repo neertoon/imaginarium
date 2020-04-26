@@ -17,7 +17,7 @@ const serverName = 'SERVER';
 
 // Run when client connect 
 io.on('connection', socket => {
-    socket.on('joinRoom', ({ username, room }) => {
+    socket.on('joinRoom', async ({ username, room }) => {
         if (!GamesData.canJoin(room)) {
             socket.emit('gameError', formatMessage(serverName, 'CantJoinDude'));
             return;
@@ -25,7 +25,7 @@ io.on('connection', socket => {
         
         const user = userJoin(socket.id, username, room);
         
-        GamesData.createGame(room);
+        await GamesData.createGame(room);
         GamesData.addPlayer(room, user); 
         
         socket.join(user.room);
