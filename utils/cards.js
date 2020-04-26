@@ -5,7 +5,7 @@ const readFile = util.promisify(fs.readFile);
 const readDir = util.promisify(fs.readdir);
 const rename = util.promisify(fs.rename);
 const fileUpload = require('express-fileupload');
-const unzip = require('unzip');
+//const unzip = require('unzip');
 const { Readable } = require('stream');
 const imagesPath = 'utils/cardImages/';
 
@@ -71,7 +71,7 @@ async function insertCardPackMethod(req, res){
             }
             fs.mkdirSync(tempDir);
             
-            readable.pipe(unzip.Extract({ path: tempDir }));
+            //readable.pipe(unzip.Extract({ path: tempDir }));
 
             let newFiles = await readDir(tempDir);
             const newFileNames = [];
