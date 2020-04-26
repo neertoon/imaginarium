@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css"
+			integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk="
+			crossorigin="anonymous"
+		/>
+		<link rel="stylesheet" href="css/style.css" />
+		<title>ChatCord App</title>
+	</head>
+	<body>
+		<div class="join-container">
+			<header class="join-header">
+				<h1><i class="fas fa-smile"></i> Admin</h1>
+			</header>
+			<main class="join-main">
+				<div>
+					<h3>DODAWANIE KART</h3>
+				<form action="insertCardPack" method="post" id="uploadForm">
+					<input type="file" id="fileInput">
+					<input type="submit"/>
+				</form>
+			</div>
+			<br/>
+			<br/>
+			<br/>
+			<div>
+				
+				<h3>CZYSZCZENIE BAZY</h3>
+				<form action="clearAllCards" method="post" id="clearForm">
+					<input type="submit" value="WYCZYŚĆ WSZYSTKO">
+				</form>
+			</div>
+			</main>
+		</div>
+			<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+  			<script>
+				  const frm = $('#uploadForm');
+
+					frm.submit(function (e) {
+
+						e.preventDefault();
+						var fd = new FormData();    
+						let fileinpucik = $('#fileInput');
+						fd.append( 'zippack', fileinpucik[0].files[0] );
+
+
+						$.ajax({
+							type: frm.attr('method'),
+							url: frm.attr('action'),
+							data: fd,
+							processData: false,
+							contentType: false,
+							success: function (data) {
+								console.log('Submission was successful.');
+								alert(data.message);
+							},
+							error: function (data) {
+								console.log('An error occurred.');
+								alert(data);
+							},
+						});
+					});
+
+					const clearFrm = $('#clearForm');
+
+					clearFrm.submit(function (e) {
+						e.preventDefault();
+						if(confirm("JESTEŚ PEWIEN, ŻE CHCESZ USUNĄĆ WSZYSTKIE KARTY?")){
+							$.ajax({
+								type: clearFrm.attr('method'),
+								url: clearFrm.attr('action'),
+								success: function (data) {
+									console.log('Submission was successful.');
+									alert(data.message);
+								},
+								error: function (data) {
+									console.log('An error occurred.');
+									alert(data);
+								},
+							});
+						}
+					});
+
+					
+			</script>
+	</body>
+</html>

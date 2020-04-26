@@ -59,6 +59,7 @@ async function insertCardPackMethod(req, res){
                 message: 'No file uploaded, Use "zippack" post data element'
             });
         } else {
+            //TODO: zamiast wypakowywac do temp folderu mozna po prostu sprawdzic zawartosc zipa, poorównac pliki i bezposrednio wypakować do głównego folderu 
             const tempDir = 'utils/tempUpload/';
             if (fs.existsSync(tempDir)){
                 fs.rmdirSync(tempDir, { recursive: true });
@@ -87,7 +88,7 @@ async function insertCardPackMethod(req, res){
             //send response
             res.send({
                 status: true,
-                message: 'Pliki załądowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
+                message: 'Pliki załadowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
             });
         }
     } catch (err) {
