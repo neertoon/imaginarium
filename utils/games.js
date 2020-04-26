@@ -122,6 +122,7 @@ var GamesData = {
             game.phase = this.phaseVoting;
 
             for (const playerIndex of game.players){
+                playerIndex.selectedCard = false;
                 io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
             }
         }
