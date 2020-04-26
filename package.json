@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/neertoon/imaginarium#readme",
   "dependencies": {
+    "adm-zip": "^0.4.14",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.3",
     "moment": "^2.24.0",
