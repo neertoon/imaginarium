@@ -148,6 +148,16 @@ var GamesData = {
         }
         
         return publicUsers;
+    },
+    
+    userLeave: function(room, id) {
+        const game = games.find(game => game.room === room);
+        
+        const index = game.players.findIndex(user => user.id === id);
+
+        if (index !== -1) {
+            return game.players.splice(index, 1)[0];
+        }
     }
 }
 

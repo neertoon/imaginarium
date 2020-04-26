@@ -33,12 +33,9 @@ io.on('connection', socket => {
         socket.emit('message', formatMessage(serverName, 'Welcome to The Game'));
 
         // Broadcast when user connect
-        socket.broadcast.to(user.room).emit('message', formatMessage(serverName, `${user.username} joined The Game`));  
-        
-        io.to(user.room).emit('roomUsers', {
-            room: user.room,
-            users: GamesData.getUsersForClient(room)
-        });
+        socket.broadcast.to(user.room).emit('message', formatMessage(serverName, `${user.username} joined The Game`));
+
+        sendUsers(user, io);
     });
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
@@ -46,12 +43,11 @@ io.on('connection', socket => {
         const user = userLeave(socket.id);
         
         if (user) {
+            GamesData.userLeave(user.room, user.id);
+            
+            sendUsers(user, io);
+            
             io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
-
-            io.to(user.room).emit('roomUsers', {
-                room: user.room,
-                users: getRoomUsers(user.room)
-            });
         } 
     });
     
@@ -74,6 +70,8 @@ io.on('connection', socket => {
         } else {
             socket.emit('phase', 'readyOff');
         }
+
+        sendUsers(user, io);
     });
     
     socket.on('gamePickCard', (cardIndex) => {
@@ -84,6 +82,8 @@ io.on('connection', socket => {
         if (!GamesData.addCardForVoting(user, cardIndex, io)) {
             socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
         }
+
+        sendUsers(user, io);
     });
 });
 
@@ -92,3 +92,10 @@ const PORT = 3000 || process.env.PORT;
 //KŚ tu był
 
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+function sendUsers(user, io) {
+    io.to(user.room).emit('roomUsers', {
+        room: user.room,
+        users: GamesData.getUsersForClient(user.room)
+    });
+}
