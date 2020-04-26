@@ -143,7 +143,8 @@ var GamesData = {
                 username: playerIndex.username,
                 madeMove: userMadeMove,
                 points: playerIndex.points,
-                isHost: playerIndex.isHost
+                isHost: playerIndex.isHost,
+                isStoryteller: playerIndex.isStoryteller,
             };
             
             publicUsers.push(publicUser);
