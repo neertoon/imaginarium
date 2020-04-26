@@ -4,8 +4,9 @@ const fs = require('fs');
 const readFile = util.promisify(fs.readFile);
 const readDir = util.promisify(fs.readdir);
 const rename = util.promisify(fs.rename);
+const unlink = util.promisify(fs.unlink);
 const fileUpload = require('express-fileupload');
-//const unzip = require('unzip');
+const admZip = require('adm-zip');
 const { Readable } = require('stream');
 const imagesPath = 'utils/cardImages/';
 
@@ -52,26 +53,19 @@ function shuffle(cards){
 
 async function insertCardPackMethod(req, res){
     try {
-        if(!req.files) {
+        if(!req.files.zippack.data) {
             res.send({
                 status: false,
-                message: 'No file uploaded'
+                message: 'No file uploaded, Use "zippack" post data element'
             });
         } else {
-            //Use the name of the input field (i.e. "avatar") to retrieve the uploaded file
-            let zippack = req.files.zippack;
-            const readable = new Readable()
-           // readable._read = () => {}; // _read is required but you can noop it
-            readable.push(zippack.data);
-            readable.push(null);
-
             const tempDir = 'utils/tempUpload/';
             if (fs.existsSync(tempDir)){
                 fs.rmdirSync(tempDir, { recursive: true });
             }
             fs.mkdirSync(tempDir);
-            
-            //readable.pipe(unzip.Extract({ path: tempDir }));
+            let zip = new admZip(req.files.zippack.data);
+            zip.extractAllTo(tempDir);
 
             let newFiles = await readDir(tempDir);
             const newFileNames = [];
@@ -88,13 +82,12 @@ async function insertCardPackMethod(req, res){
                     await rename('utils/tempUpload/' + newFileNames[i], imagesPath + newFileNames[i]);
                 }
             }
-
-            fs.rmdirSync(tempDir);
+            fs.rmdirSync(tempDir, { recursive: true });
             
             //send response
             res.send({
                 status: true,
-                message: 'File is uploaded. Pomiete duplikaty: ' + duplicatesList.join(", ")
+                message: 'Pliki załądowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
             });
         }
     } catch (err) {
@@ -102,5 +95,21 @@ async function insertCardPackMethod(req, res){
     }
  }
 
+ async function clearAllCardsMethod(req, res){
+    try {
+        let existingCards = await loadCardsListFromDirectory();
+        for(const file of files){
+            await unlink(imagesPath + file);
+        }
+        res.send({
+            status: true,
+            message: 'WYCZYSZCZONO!'
+        });
+        
+    } catch (err) {
+        res.status(500).send(err);
+    }
+ }
 
-module.exports = {loadCardsListFromDirectory, imagePathToBase64, shuffle, insertCardPackMethod};
+
+module.exports = {loadCardsListFromDirectory, imagePathToBase64, shuffle, insertCardPackMethod, clearAllCardsMethod};

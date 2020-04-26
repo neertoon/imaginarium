@@ -4,7 +4,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
-const {insertCardPackMethod} = require('./utils/cards');
+const {insertCardPackMethod, clearAllCardsMethod} = require('./utils/cards');
 const GamesData = require('./utils/games');
 const fileUpload = require('express-fileupload');//https://attacomsian.com/blog/uploading-files-nodejs-express#
 
@@ -118,6 +118,10 @@ io.on('connection', socket => {
 
 app.post('/insertCardPack', async (req, res) => {
     await insertCardPackMethod(req, res);
+});
+
+app.post('/clearAllCards', async (req, res) => {
+    await clearAllCardsMethod(req, res);
 });
 
 
