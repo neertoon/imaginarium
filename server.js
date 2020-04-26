@@ -91,9 +91,7 @@ io.on('connection', socket => {
             socket.emit('gameWarning', formatMessage(serverName, "You didn't choose anything"));
         }
         const user = getCurrentUser(socket.id);
-        if (!GamesData.voteForCard(user, cardIndex, io)) {
-            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
-        }
+        GamesData.voteForCard(user, cardIndex, io);
 
         sendUsers(user, io);
     });

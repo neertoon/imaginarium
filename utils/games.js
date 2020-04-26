@@ -146,7 +146,14 @@ var GamesData = {
         }
     },
     voteForCard(user, cardIndex, io) {
+        cardIndex = parseInt(cardIndex);
         if (user.votedCardIndex !== -1) {
+            io.to(user.id).emit('gameWarning', {text: 'You already choose card for voting'});
+            return false;
+        }
+
+        if (user.pickedCardIndex === cardIndex) {
+            io.to(user.id).emit('gameWarning', {text: 'You cannot vote for your card'});
             return false;
         }
 
@@ -155,7 +162,7 @@ var GamesData = {
 
 
         user.selectedCard = true;
-        user.votedCardIndex = parseInt(cardIndex);
+        user.votedCardIndex = cardIndex;
 
         const usersThatVoted = game.players.filter(user => user.selectedCard === true);
         console.log(user.username+' voted '+cardIndex);
