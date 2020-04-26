@@ -4,7 +4,9 @@ const express = require('express');
 const socketio = require('socket.io');
 const formatMessage = require('./utils/messages');
 const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/users');
+const {insertCardPackMethod} = require('./utils/cards');
 const GamesData = require('./utils/games');
+const fileUpload = require('express-fileupload');//https://attacomsian.com/blog/uploading-files-nodejs-express#
 
 const app = express();
 const server = http.createServer(app);
@@ -12,6 +14,11 @@ const io = socketio(server);
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(fileUpload({
+    createParentPath: true
+}));
+
 
 const serverName = 'SERVER';
 
@@ -108,6 +115,11 @@ io.on('connection', socket => {
         sendUsers(user, io);
     });
 });
+
+app.post('/insertCardPack', async (req, res) => {
+    await insertCardPackMethod(req, res);
+});
+
 
 const PORT = 3000 || process.env.PORT;
 

@@ -27,7 +27,7 @@ var GamesData = {
             hostId: -1,
             cardsForVoting: []
         };
-        let cards = await loadCardsListFromDirectory(imagesPath);
+        let cards = await loadCardsListFromDirectory();
         shuffle(cards);
         game.cardsToUse = cards;
 
