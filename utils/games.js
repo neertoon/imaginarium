@@ -170,34 +170,20 @@ var GamesData = {
         user.votedCardIndex = cardIndex;
 
         const usersThatVoted = game.players.filter(user => user.selectedCard === true);
-        console.log(user.username+' voted '+cardIndex);
 
         if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
-            console.log('ALL USERS voted ');
-            
             const storyTeller = game.players.find(user => user.isStoryteller === true);
-            console.log('storyTeller.pickedCardIndex ');
-            console.log(storyTeller.pickedCardIndex);
             const playersThatFoundStorytellerCard = game.players.filter(userki => userki.votedCardIndex === storyTeller.pickedCardIndex);
             const playersNotVotedForStoryteller = game.players.filter(userki => userki.votedCardIndex !== storyTeller.pickedCardIndex);
 
-            console.log('playersThatFoundStorytellerCard.length');
-            console.log(playersThatFoundStorytellerCard.length);
-            console.log(game.players.length);
-            // Aha... trzeba jeszcze dorobić, żeby narrator otrzymał od strzzłu głos na swoją kartę. Wtedy 1 warunek musi być na 1 a nie 0
-            // Nie może głosować na siebie
             if (playersThatFoundStorytellerCard.length === 1 || playersThatFoundStorytellerCard.length === game.players.length) {
-                console.log('LICZYMY 2');
                 for (const player of game.players){
-                    console.log('player.votedCardIndex');
-                    console.log(player.votedCardIndex);
                     if (player.isStoryteller) {
                         continue;
                     }
                     player.points += 2;
                 }
             } else {
-                console.log('LICZYMY INACZEJ');
                 for (const player of playersThatFoundStorytellerCard){
                     player.points += 3;
                 }
@@ -293,8 +279,6 @@ module.exports = GamesData;
 
 /*
 Do zorbiniea:
-Nie można wybrać karty, gdy już wybrano kartę albo inna faza gry
-To samo z głosowaniem
 Kontroluj niewłaściwe wartości przychodzące
  */
  
