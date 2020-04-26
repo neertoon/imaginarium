@@ -211,6 +211,7 @@ var GamesData = {
             nextStoryTeller = nextStoryTeller === game.players.length ? 0 : nextStoryTeller; 
         }
         game.players[nextStoryTeller].isStoryteller = true;
+        game.usedCards = game.usedCards.concat(game.cardsForVoting);
         game.cardsForVoting = [];
 
         for(let player of game.players)
