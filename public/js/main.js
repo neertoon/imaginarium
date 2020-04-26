@@ -34,6 +34,10 @@ socket.on('gameError', message => {
     window.location = '/';
 });
 
+socket.on('gameWarning', message => {
+    alert(message.text);
+});
+
 socket.on('phase', message => {
     if (message == 'selectCard') {
         $('#btnSetReady').hide();

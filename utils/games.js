@@ -106,6 +106,10 @@ var GamesData = {
     },
     
     addCardForVoting: function(user, cardIndex, io) {
+        if (user.pickedCardIndex !== -1) {
+            return false;
+        }
+        
         const room = user.room; 
         const game = games.find(game => game.room === room);
         
@@ -126,6 +130,7 @@ var GamesData = {
                 io.to(playerIndex.id).emit('gameCardsForVoting', game.cardsForVoting);
             }
         }
+        return true;
     },
 
     loadCardsListFromDirectory: function() {
