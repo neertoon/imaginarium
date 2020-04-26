@@ -68,26 +68,7 @@ var GamesData = {
         const userThatAgreed = game.players.filter(user => user.isReady === true);
 
         if (game.players.length === userThatAgreed.length) {
-            io.to(room).emit('phase', 'selectCard');
-            
-            game.phase = this.phasePickingCard;
-
-
-            for(let player of game.players)
-            {
-                let cardsList = player.cards
-                while(cardsList.length < 6)
-                {
-                    
-                    const basedImage = await imagePathToBase64(imagesPath + game.cardsToUse[0]);
-                    cardsList.push(basedImage);
-                    game.cardsToUse.shift();
-                }
-            }
-
-            for (const playerIndex of game.players)
-                io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
-            
+            await this.goToPhasePickingCard(game, io);
         }
         
         return true;
@@ -178,7 +159,7 @@ var GamesData = {
         console.log(user.username+' voted '+cardIndex);
 
         if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
-            // io.to(room).emit('phase', 'scoring');
+            io.to(room).emit('phase', 'scoring');
 
             game.phase = this.phaseScore;
 
@@ -194,6 +175,61 @@ var GamesData = {
         }
 
         return true;
+    },
+    
+    async nextRound(user, io) {
+        const room = user.room;
+        const game = games.find(game => game.room === room);
+        
+        if (user.selectedCard === true && game.phase === this.phaseScore) {
+            return false;
+        }
+
+        user.selectedCard = true;
+        user.votedCardIndex = -1;
+
+        const usersThatReady = game.players.filter(user => user.selectedCard === true);
+
+        if (game.players.length === usersThatReady.length && game.phase === this.phaseScore) {
+            await this.goToPhasePickingCard(game, io);
+        }
+
+        return true;
+    },
+
+    async goToPhasePickingCard(game, io) {
+        io.to(game.room).emit('phase', 'selectCard');
+
+        game.phase = this.phasePickingCard;
+
+        const indexOfStoryTeller = game.players.findIndex(user => user.isStoryteller === true);
+        var nextStoryTeller = 0;
+        if (indexOfStoryTeller !== -1) {
+            nextStoryTeller = indexOfStoryTeller + 1;
+            nextStoryTeller = nextStoryTeller === game.players.length ? 0 : nextStoryTeller; 
+        }
+        game.players[nextStoryTeller].isStoryteller = true;
+        game.cardsForVoting = [];
+
+        for(let player of game.players)
+        {
+            player.selectedCard = false;
+            player.pickedCardIndex = -1;
+            player.votedCardIndex = -1;
+            
+            let cardsList = player.cards
+            while(cardsList.length < 6)
+            {
+
+                const basedImage = await imagePathToBase64(imagesPath + game.cardsToUse[0]);
+                cardsList.push(basedImage);
+                game.cardsToUse.shift();
+            }
+        }
+
+        for (const playerIndex of game.players) {
+            io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+        }
     }
 }
 

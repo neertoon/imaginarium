@@ -97,6 +97,15 @@ io.on('connection', socket => {
 
         sendUsers(user, io);
     });
+
+    socket.on('gameNextRound', (msg) => {
+        const user = getCurrentUser(socket.id);
+        if (!GamesData.nextRound(user, io)) {
+            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
+        }
+
+        sendUsers(user, io);
+    });
 });
 
 const PORT = 3000 || process.env.PORT;

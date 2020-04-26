@@ -50,7 +50,10 @@ socket.on('phase', message => {
     } else if (message == 'voting') {
         $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
-    } 
+    } else if (message == 'scoring') {
+        $('#btnVoteForCard').hide();
+        $('#btnSeenScoring').show();
+    }
 });
 
 socket.on('gameCardsPack', cardsPack => {
@@ -122,6 +125,12 @@ const Game = {
         event.preventDefault();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
+        var element = $(event.target);
+        element.hide();
+    },
+    nextRound : function(event) {
+        event.preventDefault();
+        socket.emit('gameNextRound', 'NEXT');
         var element = $(event.target);
         element.hide();
     }
