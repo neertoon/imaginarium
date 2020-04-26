@@ -68,7 +68,8 @@ body {
 }
 
 .imaginarium-game {
-    height: calc(100% - 160px);   
+    height: calc(100% - 160px);
+    text-align: center;
 }
 
 .btn-action-bottom {
@@ -121,6 +122,12 @@ body {
     font-size: 24px;
 }
 
+.game-card {
+    width: 100px; 
+    height: 150px;
+    margin: 0 5px 10px 5px;
+}
+
 @media (max-width: 768px) {
     #game-users-area {
         /*display: block !important;*/
@@ -138,6 +145,10 @@ body {
 
     #game-users-area table {
         border-top-left-radius: 15px;
+    }
+    
+    .imaginarium-game {
+        padding: 0;
     }
 }
 

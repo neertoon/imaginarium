@@ -51,8 +51,10 @@ socket.on('phase', message => {
 socket.on('gameCardsPack', cardsPack => {
     console.log(cardsPack);
     $('#player-cards').empty();
+    var i=0;
     cardsPack.forEach((card)=>{
-        $('#player-cards').append(`<img src="${card}"/>`);
+        $('#player-cards').append(`<img data-index="${i}" class="game-card" src="${card}"/>`);
+        i++;
     });
 });
 
