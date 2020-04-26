@@ -93,6 +93,8 @@ var GamesData = {
         const game = games.find(game => game.room === room);
         
         const voteLength = game.cardsForVoting.push(user.cards[cardIndex]);
+
+        user.cards.splice(cardIndex, 1)[0];
         
         user.selectedCard = true;
         user.pickedCardIndex = voteLength - 1;
