@@ -129,6 +129,25 @@ var GamesData = {
         }
 
         return true;
+    },
+    
+    getUsersForClient: function(room) {
+        const game = games.find(game => game.room === room);
+
+        var publicUsers = [];
+        for (const playerIndex of game.players){
+            const userMadeMove = game.phase < this.phasePickingCard ? playerIndex.isReady : playerIndex.selectedCard;
+            const publicUser = {
+                username: playerIndex.username,
+                madeMove: userMadeMove,
+                points: playerIndex.points,
+                isHost: playerIndex.isHost
+            };
+            
+            publicUsers.push(publicUser);
+        }
+        
+        return publicUsers;
     }
 }
 

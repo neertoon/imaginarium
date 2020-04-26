@@ -2,6 +2,7 @@ const chatForm = document.getElementById('chat-form');
 const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
+const userTable = $('#game-user-table');
 
 // Get user and room from URL
 const { username, room } = Qs.parse(location.search, {
@@ -89,9 +90,13 @@ function outputRoomName(room) {
 }
 
 function outputUsers(users) {
-    usersList.innerHTML = `
-        ${users.map(user => `<li>${user.username}</li>`).join('')}
-    `;
+    userTable.html(`
+        ${users.map(user => `<tr>
+            <td>${user.username}</td>
+            <td>${user.madeMove}</td>
+            <td>${user.points}</td>
+        </tr>`).join('')}
+    `);
 }
 
 const Game = {

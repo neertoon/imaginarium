@@ -95,6 +95,7 @@ body {
     text-align: left;
     color: black;
     width: 100%;
+    table-layout: fixed;
 }
 
 #game-users-area table tr {
@@ -118,8 +119,19 @@ body {
     color: chartreuse;
 }
 
+#game-users-area table td:first-child {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+#game-users-area table td:nth-child(2) {
+    width: 15%;
+}
+
 #game-users-area table td:last-child {
     font-size: 24px;
+    width: 15%;
 }
 
 .game-card {
