@@ -109,9 +109,10 @@ var GamesData = {
         const room = user.room; 
         const game = games.find(game => game.room === room);
         
-        game.cardsForVoting.push(user.cards[cardIndex]);
+        const voteLength = game.cardsForVoting.push(user.cards[cardIndex]);
         
         user.selectedCard = true;
+        user.pickedCardIndex = voteLength - 1;
 
         const userThatPickedCard = game.players.filter(user => user.selectedCard === true);
 
