@@ -148,3 +148,13 @@ const Game = {
         element.hide();
     }
 };
+
+function toggleUsers() {
+    let userArea = $('#game-users-area');
+    if (userArea.hasClass('showed')) {
+        userArea.removeClass('showed');    
+    } else {
+        userArea.addClass('showed');
+    }
+    
+}

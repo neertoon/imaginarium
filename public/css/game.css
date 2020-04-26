@@ -144,12 +144,16 @@ body {
     border: 2px solid white;
 }
 
+#game-user-toggle {
+    display: none;
+}
+
 @media (max-width: 768px) {
     #game-users-area {
-        /*display: block !important;*/
+        display: block !important;
         position: absolute;
         top: 0;
-        right: 0;
+        right: -80%;
         height: 100vh;
         width: 80vw;
         border-top-left-radius: 15px;
@@ -157,10 +161,22 @@ body {
         -webkit-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
         -moz-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
         box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
+        transition: right 0.5s;
+    }
+
+    #game-users-area.showed {
+        right: 0;
     }
 
     #game-users-area table {
         border-top-left-radius: 15px;
+    }
+    
+    #game-user-toggle {
+        display: block;
+        position: absolute;
+        padding: 10px;
+        left: -40px;
     }
     
     .imaginarium-game {
