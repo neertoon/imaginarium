@@ -148,12 +148,12 @@ var GamesData = {
     voteForCard(user, cardIndex, io) {
         cardIndex = parseInt(cardIndex);
         if (user.votedCardIndex !== -1) {
-            io.to(user.id).emit('gameWarning', {text: 'You already choose card for voting'});
+            io.to(user.id).emit('gameWarning', {text: 'You already choose card for voting', phase: 'voting'});
             return false;
         }
 
         if (user.pickedCardIndex === cardIndex) {
-            io.to(user.id).emit('gameWarning', {text: 'You cannot vote for your card'});
+            io.to(user.id).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
             return false;
         }
 

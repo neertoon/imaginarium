@@ -37,6 +37,12 @@ socket.on('gameError', message => {
 
 socket.on('gameWarning', message => {
     alert(message.text);
+    
+    if (message.hasOwnProperty('phase')) {
+        if (message.phase === 'voting') {
+            $('#btnVoteForCard').show();
+        }
+    }
 });
 
 socket.on('phase', message => {
