@@ -61,6 +61,8 @@ socket.on('phase', message => {
     } else if (message == 'scoring') {
         $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
+    } else if (message == 'narrator') {
+        $('#btnVoteForCard').hide();
     }
 });
 

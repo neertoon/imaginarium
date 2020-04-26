@@ -107,7 +107,12 @@ var GamesData = {
             game.phase = this.phaseVoting;
 
             for (const playerIndex of game.players){
-                playerIndex.selectedCard = false;
+                if (playerIndex.isStoryteller) {
+                    playerIndex.votedCardIndex = playerIndex.pickedCardIndex;
+                    io.to(playerIndex.id).emit('phase', 'narrator');
+                } else {
+                    playerIndex.selectedCard = false;    
+                }
             }
 
             io.to(room).emit('gameCardsPack', game.cardsForVoting);
