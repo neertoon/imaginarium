@@ -56,39 +56,22 @@ async function insertCardPackMethod(req, res){
         if(!req.files.zippack.data) {
             res.send({
                 status: false,
-                message: 'No file uploaded, Use "zippack" post data element'
+                message: 'No file uploaded, Use "zippack" post form-data element'
             });
         } else {
-            //TODO: zamiast wypakowywac do temp folderu mozna po prostu sprawdzic zawartosc zipa, poorównac pliki i bezposrednio wypakować do głównego folderu 
-            const tempDir = 'utils/tempUpload/';
-            if (fs.existsSync(tempDir)){
-                fs.rmdirSync(tempDir, { recursive: true });
-            }
-            fs.mkdirSync(tempDir);
             let zip = new admZip(req.files.zippack.data);
-            zip.extractAllTo(tempDir);
-
-            let newFiles = await readDir(tempDir);
-            const newFileNames = [];
-            newFiles.forEach(function (file) {
-                newFileNames.push(file); 
-            });
             let existingCards = await loadCardsListFromDirectory();
             let duplicatesList = [];
-            for(let i = 0; i < newFileNames.length; i++){
-                if(existingCards.includes(newFileNames[i]))
-                    duplicatesList.push(newFileNames[i]);
+            zip.getEntries().forEach(zipEntry => {
+                const entryName = zipEntry.name;
+                if(existingCards.includes(entryName))
+                    duplicatesList.push(entryName);
                 else
-                {
-                    await rename('utils/tempUpload/' + newFileNames[i], imagesPath + newFileNames[i]);
-                }
-            }
-            fs.rmdirSync(tempDir, { recursive: true });
-            
-            //send response
+                    zip.extractEntryTo(entryName, imagesPath, false);
+            });
             res.send({
                 status: true,
-                message: 'Pliki załadowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
+                message: 'Plik załadowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
             });
         }
     } catch (err) {
