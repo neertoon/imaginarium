@@ -77,6 +77,8 @@ socket.on('gameCardsPack', cardsPack => {
         $('#player-cards').append(`<img data-index="${i}" onclick="Game.selectCard(event, $('#selected-card-index'))" class="game-card" src="${card}"/>`);
         i++;
     });
+    let fakeEvent = {target: $('#player-cards').children()[0]};
+    Game.selectCard(fakeEvent, $('#selected-card-index'));
 });
 
 chatForm.addEventListener('submit', (e) => {
@@ -115,6 +117,12 @@ function outputUsers(users) {
     `);
 }
 
+function setSpotlightCards(selectedCard){
+    $('#spotlight-selected-card').attr('src', selectedCard.attr('src'));
+    $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : '');
+    $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : '');
+}
+
 const Game = {
     start : function(event) {
         event.preventDefault();
@@ -126,6 +134,7 @@ const Game = {
         cardIndexHolder.val(value);
         $('.game-card').removeClass('selected');
         element.addClass('selected');
+        setSpotlightCards(element);
     },
     sendPickedCard : function(event, cardNumber) {
         event.preventDefault();

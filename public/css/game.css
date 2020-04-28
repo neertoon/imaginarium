@@ -83,6 +83,8 @@ body {
     padding: 0;
     background-color: #673540;
     text-align: center;
+    position: relative;
+    z-index: 3;
 }
 
 #game-users-area h2 {
@@ -134,14 +136,51 @@ body {
     width: 15%;
 }
 
+#spotlight-view {
+    overflow: hidden;
+    margin: 0 auto;
+    width: 330px;
+}
+
+
+#spotlight-selected-card {
+    position: relative;
+    box-shadow: 5px;
+    width: 250px; 
+    height: 400px;
+    margin: 0 -172px 10px -172px;
+    z-index: 2;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+#spotlight-left-card {
+    position: relative;
+    width: 200px; 
+    height: 350px;
+    margin: 0 5px 10px -200px;
+    z-index: 1;
+}
+
+#spotlight-right-card {
+    position: relative;
+    width: 200px; 
+    height: 350px;
+    margin: 0 -200px 10px 5px;
+    z-index: 1;
+}
+
+#player-cards {
+    bottom: 0;
+}
+
 .game-card {
-    width: 100px; 
-    height: 150px;
-    margin: 0 5px 10px 5px;
+    width: 40px; 
+    height: 50px;
+    margin: 1px;
 }
 
 .game-card.selected {
-    border: 2px solid white;
+    border: 3px solid white;
 }
 
 #game-user-toggle {

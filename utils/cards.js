@@ -71,7 +71,7 @@ async function insertCardPackMethod(req, res){
             });
             res.send({
                 status: true,
-                message: 'Plik załadowany. Pominięte duplikaty: ' + duplicatesList.join(", ")
+                message: 'Plik załadowany. ' + ( duplicatesList.length > 0 ? ('Pominięte duplikaty: ' + duplicatesList.join(", ")) : '')
             });
         }
     } catch (err) {
