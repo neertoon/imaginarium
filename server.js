@@ -125,7 +125,7 @@ app.post('/clearAllCards', async (req, res) => {
 });
 
 
-const PORT = 80 || process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 //KŚ tu był
 
