@@ -125,6 +125,11 @@ var GamesData = {
         const game = games.find(game => game.room === room);
 
         var publicUsers = [];
+        
+        if (!game || game.players.length === 0) {
+            return publicUsers;
+        }
+        
         for (const playerIndex of game.players){
             const userMadeMove = game.phase < this.phasePickingCard ? playerIndex.isReady : playerIndex.selectedCard;
             const publicUser = {
@@ -147,7 +152,12 @@ var GamesData = {
         const index = game.players.findIndex(user => user.id === id);
 
         if (index !== -1) {
-            return game.players.splice(index, 1)[0];
+            game.players.splice(index, 1)[0];
+        }
+
+        if (game.players.length === 0) {
+            const gameIndex = games.findIndex(game => game.room === room);
+            games.splice(gameIndex, 1)[0];
         }
     },
     voteForCard(user, cardIndex, io) {
