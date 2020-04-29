@@ -5,7 +5,7 @@ const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
 
 // Get user and room from URL
-const { username, room } = Qs.parse(location.search, {
+const { username, room, password } = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 
@@ -14,7 +14,8 @@ const socket = io();
 // Join chatroom
 socket.emit('joinRoom', {
     username,
-    room
+    room,
+    password
 });
 
 socket.on('roomUsers', ({ room, users }) => {

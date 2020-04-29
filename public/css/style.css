@@ -159,7 +159,8 @@ a {
 	margin-bottom: 5px;
 }
 
-.join-main input[type='text'] {
+.join-main input[type='text'],
+.join-main input[type='password'] {
 	font-size: 16px;
 	padding: 5px;
 	height: 40px;
