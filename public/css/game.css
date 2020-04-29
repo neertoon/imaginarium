@@ -1,3 +1,13 @@
+@font-face {
+    font-family: "BalooTamma2Bold";
+    src: url("../fonts/BalooTamma2-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "BalooTamma2";
+    src: url("../fonts/BalooTamma2-Regular.ttf") format("truetype");
+}
+
 body {
     margin: 0;
     /*background-color: #d7a571;*/
@@ -49,10 +59,35 @@ body {
 }
 
 #game-play-area {
+    /*
     background-color: hsl(2, 57%, 40%);
     background-image: repeating-linear-gradient(transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
     repeating-linear-gradient(270deg, transparent, transparent 50px, rgba(0,0,0,.4) 50px, rgba(0,0,0,.4) 53px, transparent 53px, transparent 63px, rgba(0,0,0,.4) 63px, rgba(0,0,0,.4) 66px, transparent 66px, transparent 116px, rgba(0,0,0,.5) 116px, rgba(0,0,0,.5) 166px, rgba(255,255,255,.2) 166px, rgba(255,255,255,.2) 169px, rgba(0,0,0,.5) 169px, rgba(0,0,0,.5) 179px, rgba(255,255,255,.2) 179px, rgba(255,255,255,.2) 182px, rgba(0,0,0,.5) 182px, rgba(0,0,0,.5) 232px, transparent 232px),
     repeating-linear-gradient(125deg, transparent, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px, transparent 3px, transparent 5px, rgba(0,0,0,.2) 5px);
+    
+     */
+
+    /*
+    background: #dd3e54;  
+    background: -webkit-linear-gradient(to top, #6be585, #dd3e54); 
+    background: linear-gradient(to top, #6be585, #dd3e54); 
+    */
+
+    /*
+    background: #dd3e54;  
+    background: -webkit-linear-gradient(to bottom, #6be585, #dd3e54);  
+    background: linear-gradient(to bottom, #6be585, #dd3e54);
+     
+     */
+
+
+
+    background: #fe8c00;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to top, #f83600, #fe8c00);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to top, #f83600, #fe8c00); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+
 }
 
 .container-fluid div {
@@ -64,11 +99,11 @@ body {
 }
 
 .imaginarium-actions {
-    height: 80px;
+    height: 100px;
 }
 
 .imaginarium-game {
-    height: calc(100% - 160px);
+    height: calc(100% - 180px);
     text-align: center;
 }
 
@@ -85,12 +120,15 @@ body {
     text-align: center;
     position: relative;
     z-index: 3;
+    border-left: 3px solid #592333;
 }
 
 #game-users-area h2 {
-    color: #f3f642;
+    /*color: #f3f642;*/
+    color: #fff155;
     margin: 0;
     padding: 10px;
+    font-family: 'BalooTamma2Bold';
 }
 
 #game-users-area table {
@@ -103,11 +141,31 @@ body {
 #game-users-area table tr {
     color: black;
     border-top: 2px solid #592333;
-    background-color: #994964;
+    /*background-color: #994964;*/
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#994964+0,993757+48,994964+100 */
+    background: #994964; /* Old browsers */
+    background: -moz-linear-gradient(top,  #994964 0%, #993757 48%, #994964 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #994964 0%,#993757 48%,#994964 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #994964 0%,#993757 48%,#994964 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#994964', endColorstr='#994964',GradientType=0 ); /* IE6-9 */
+
+}
+
+#game-users-area table tr:last-child {
+    border-bottom: 2px solid #592333;
 }
 
 #game-users-area table tr:nth-child(odd) {
-    background-color: #673540;
+    /*background-color: #673540;*/
+
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#673540+0,662836+49,673540+100 */
+    background: #673540; /* Old browsers */
+    background: -moz-linear-gradient(top,  #673540 0%, #662836 49%, #673540 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #673540 0%,#662836 49%,#673540 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #673540 0%,#662836 49%,#673540 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#673540', endColorstr='#673540',GradientType=0 ); /* IE6-9 */
+
 }
 
 #game-users-area table td {
@@ -115,6 +173,7 @@ body {
     text-transform: uppercase;
     font-size: 13px;
     color: #f3f642;
+    font-family: 'BalooTamma2';
 }
 
 #game-users-area table td .fa-check-circle {
@@ -187,6 +246,15 @@ body {
     display: none;
 }
 
+.game-btn-normal-style {
+    background-image: radial-gradient( circle farthest-corner at 50.3% 44.5%,  rgba(116,147,179,1) 0%, rgba(62,83,104,1) 100.2% );
+    color: #ddd;
+
+    -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+}
+
 @media (max-width: 768px) {
     #game-users-area {
         display: block !important;
@@ -195,7 +263,6 @@ body {
         right: -80%;
         height: 100vh;
         width: 80vw;
-        border-top-left-radius: 15px;
         border-bottom-left-radius: 15px;
         -webkit-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
         -moz-box-shadow: -1px 0px 7px 0px rgba(0,0,0,1);
@@ -215,11 +282,27 @@ body {
         display: block;
         position: absolute;
         padding: 10px;
-        left: -40px;
+        left: -46px;
+
+        background-image: linear-gradient(to right, #232526 0%, #414345 51%, #232526 100%);
+        border: 0;
+        border-bottom-left-radius: 5px;
+        outline:none;
+        
+        color: #ccc;
+        font-size: 20px;
+
+        -webkit-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
     }
     
     .imaginarium-game {
         padding: 0;
+    }
+
+    #game-user-toggle {
+        background-position: right center;
     }
 }
 
