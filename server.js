@@ -25,7 +25,7 @@ const serverName = 'SERVER';
 // Run when client connect 
 io.on('connection', socket => {
     socket.on('joinRoom', async ({ username, room }) => {
-        socket.emit('gameWarning', formatMessage(serverName, 'Patrz: '.process.env.IPASSWORD));
+        socket.emit('gameWarning', formatMessage(serverName, 'Patrz: '+process.env.IPASSWORD));
         
         if (!GamesData.canJoin(room)) {
             socket.emit('gameError', formatMessage(serverName, 'CantJoinDude'));
