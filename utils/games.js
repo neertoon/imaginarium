@@ -84,7 +84,7 @@ var GamesData = {
         return games[index].phase == this.phaseJoining;
     },
     
-    addCardForVoting: function(user, cardIndex, io) {
+    addCardForVoting: async function(user, cardIndex, io) {
         if (user.pickedCardIndex !== -1) {
             return false;
         }
@@ -102,6 +102,8 @@ var GamesData = {
         const userThatPickedCard = game.players.filter(user => user.selectedCard === true);
 
         if (game.players.length === userThatPickedCard.length && game.phase === this.phasePickingCard) {
+            await this.shuffleCardsForVoting(game);
+            
             io.to(room).emit('phase', 'voting');
             
             game.phase = this.phaseVoting;
@@ -281,6 +283,42 @@ var GamesData = {
         for (const playerIndex of game.players) {
             io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
         }
+    },
+    
+    shuffleCardsForVoting(game) {
+        let pickedCardIndexes = Array.from(Array(game.cardsForVoting.length).keys());
+        let shufledPickedCardsIndexes = this.shuffleArray(pickedCardIndexes);
+
+        let newPickedCard = [];
+
+        for (const player of game.players) {
+            const newCardIndex = shufledPickedCardsIndexes.findIndex(value => value === player.pickedCardIndex);
+            player.pickedCardIndex = newCardIndex;
+        }
+
+        for (const newCardIndex of shufledPickedCardsIndexes) {
+            newPickedCard.push(game.cardsForVoting[newCardIndex]);
+        }
+
+        game.cardsForVoting = newPickedCard;
+    },
+
+    shuffleArray(elements){
+        var currentIndex = elements.length, temporaryValue, randomIndex;
+
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = elements[currentIndex];
+            elements[currentIndex] = elements[randomIndex];
+            elements[randomIndex] = temporaryValue;
+        }
+
+        return elements;
     }
 }
 
