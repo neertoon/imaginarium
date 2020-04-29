@@ -119,8 +119,8 @@ function outputUsers(users) {
 
 function setSpotlightCards(selectedCard){
     $('#spotlight-selected-card').attr('src', selectedCard.attr('src'));
-    $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : '');
-    $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : '');
+    $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
+    $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }
 
 const Game = {
