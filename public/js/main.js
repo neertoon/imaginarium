@@ -75,11 +75,11 @@ socket.on('gameCardsPack', cardsPack => {
     $('#player-cards').empty();
     var i=0;
     cardsPack.forEach((card)=>{
-        $('#player-cards').append(`<img data-index="${i}" onclick="Game.selectCard(event, $('#selected-card-index'))" class="game-card" src="${card}"/>`);
+        $('#player-cards').append(`<img data-index="${i}" onclick="Game.selectCard($(event.target), $('#selected-card-index'))" class="game-card" src="${card}"/>`);
         i++;
     });
-    let fakeEvent = {target: $('#player-cards').children()[0]};
-    Game.selectCard(fakeEvent, $('#selected-card-index'));
+    let firstItem = $($('#player-cards').children()[0]);
+    Game.selectCard(firstItem, $('#selected-card-index'));
 });
 
 chatForm.addEventListener('submit', (e) => {
@@ -129,8 +129,7 @@ const Game = {
         event.preventDefault();
         socket.emit('gameUserReady', 'ok');
     },
-    selectCard: function(event, cardIndexHolder) {
-        var element = $(event.target);
+    selectCard: function(element, cardIndexHolder) {
         const value = element.data('index');
         cardIndexHolder.val(value);
         $('.game-card').removeClass('selected');
@@ -167,4 +166,22 @@ function toggleUsers() {
         userArea.addClass('showed');
     }
     
+}
+
+function nextCard(cardIndexHolder){
+    let cards = $('#player-cards').children();
+    let nextCardIndex = parseInt(cardIndexHolder.val()) + 1;
+    if(nextCardIndex == cards.length)
+        Game.selectCard($(cards[0]), cardIndexHolder);
+    else
+        Game.selectCard($(cards[nextCardIndex]), cardIndexHolder);
+}
+
+function prevCard(cardIndexHolder){
+    let cards = $('#player-cards').children();
+    let prevCardIndex = parseInt(cardIndexHolder.val()) - 1;
+    if(prevCardIndex == -1)
+        Game.selectCard($(cards[cards.length - 1]), cardIndexHolder);
+    else
+        Game.selectCard($(cards[prevCardIndex]), cardIndexHolder);
 }
