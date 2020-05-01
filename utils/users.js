@@ -5,6 +5,7 @@ function userJoin(id, username, room) {
     
     const user = {
         id, 
+        socketId: id,
         username, 
         room,
         isReady : false,
