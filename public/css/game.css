@@ -506,3 +506,7 @@ body {
     left: 82%;
     color: rgba(233, 155, 53, 0.32);
 }
+
+.disable-dbl-tap-zoom {
+    touch-action: manipulation;
+  }
