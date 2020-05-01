@@ -78,6 +78,7 @@ socket.on('gameCardsPack', cardsPack => {
         $('#player-cards').append(`<img data-index="${i}" onclick="Game.selectCard($(event.target), $('#selected-card-index'))" class="game-card" src="${card}"/>`);
         i++;
     });
+    setHeightHack();
     let firstItem = $($('#player-cards').children()[0]);
     Game.selectCard(firstItem, $('#selected-card-index'));
 });
@@ -184,4 +185,13 @@ function prevCard(cardIndexHolder){
         Game.selectCard($(cards[cards.length - 1]), cardIndexHolder);
     else
         Game.selectCard($(cards[prevCardIndex]), cardIndexHolder);
+}
+
+function setHeightHack(){
+    let cards = $('#player-cards').children();
+    let containerWidth = $('#player-cards').width();
+    for(let i = 0; i < cards.length; i++){
+        let card = cards[i];
+        $(card).height(containerWidth / 6 * 1.5);
+    }
 }
