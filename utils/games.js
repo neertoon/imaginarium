@@ -111,7 +111,7 @@ var GamesData = {
             for (const playerIndex of game.players){
                 if (playerIndex.isStoryteller) {
                     playerIndex.votedCardIndex = playerIndex.pickedCardIndex;
-                    io.to(playerIndex.id).emit('phase', 'narrator');
+                    io.to(playerIndex.socketId).emit('phase', 'narrator');
                 } else {
                     playerIndex.selectedCard = false;    
                 }
@@ -165,12 +165,12 @@ var GamesData = {
     voteForCard(user, cardIndex, io) {
         cardIndex = parseInt(cardIndex);
         if (user.votedCardIndex !== -1) {
-            io.to(user.id).emit('gameWarning', {text: 'You already choose card for voting', phase: 'voting'});
+            io.to(user.socketId).emit('gameWarning', {text: 'You already choose card for voting', phase: 'voting'});
             return false;
         }
 
         if (user.pickedCardIndex === cardIndex) {
-            io.to(user.id).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
+            io.to(user.socketId).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
             return false;
         }
 
@@ -281,7 +281,7 @@ var GamesData = {
         }
 
         for (const playerIndex of game.players) {
-            io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+            io.to(playerIndex.socketId).emit('gameCardsPack', playerIndex.cards);
         }
     },
     
@@ -319,6 +319,21 @@ var GamesData = {
         }
 
         return elements;
+    },
+    reconnect(user, io) {
+        const room = user.room;
+        const game = games.find(game => game.room === room);
+        
+        if (game.phase == this.phasePickingCard) {
+            io.to(user.socketId).emit('phase', 'selectCard');
+            io.to(user.socketId).emit('gameCardsPack', user.cards);
+        } else if (game.phase == this.phaseVoting) {
+            io.to(user.socketId).emit('phase', 'voting');
+            io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+        } else if (game.phase == this.phaseScore) {
+            io.to(user.socketId).emit('phase', 'scoring');
+            io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+        }
     }
 }
 
