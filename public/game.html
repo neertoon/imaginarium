@@ -42,8 +42,12 @@
   <div class="container">
       <div class="row disable-dbl-tap-zoom">
           <div id="game-play-area" class="col-sm-12 col-md-9">
+              <button id="game-user-leave" onclick="Game.leave();"><i class="fas fa-door-open"></i></button>
+              
               <div class="imaginarium-menu">
-                  
+                  <p id="game-area-info" class="game-item-showhide" style="display: none">
+
+                  </p>
               </div>
         
               <div class="imaginarium-game">
@@ -90,10 +94,10 @@
               </div>
         
               <div class="imaginarium-actions">
-                  <a id="btnSetReady" href="" class="btn btn-action-bottom" onclick="Game.start(event)" style="background-color: rgba(228, 234, 123, 1); color: rgba(82, 82, 82, 1);">Set ready</a>
-                  <a id="btnChooseCard" href="" class="btn btn-action-bottom game-btn-normal-style" onclick="Game.sendPickedCard(event, $('#selected-card-index').val())" style="display: none;">Choose card</a>
-                  <a id="btnVoteForCard" href="" class="btn btn-action-bottom game-btn-normal-style" onclick="Game.voteForCard(event, $('#selected-card-index').val())" style="display: none; ">Vote</a>
-                  <a id="btnSeenScoring" href="" class="btn btn-action-bottom game-btn-normal-style" onclick="Game.nextRound(event)" style="display: none;">Next round</a>
+                  <a id="btnSetReady" href="" class="btn btn-action-bottom game-item-showhide" onclick="Game.start(event)" style="display: none; background-color: rgba(228, 234, 123, 1); color: rgba(82, 82, 82, 1);">Set ready</a>
+                  <a id="btnChooseCard" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.sendPickedCard(event, $('#selected-card-index').val())" style="display: none;">Choose card</a>
+                  <a id="btnVoteForCard" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.voteForCard(event, $('#selected-card-index').val())" style="display: none; ">Vote</a>
+                  <a id="btnSeenScoring" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.nextRound(event)" style="display: none;">Next round</a>
                   <input id="selected-card-index" type="hidden" value="" />
               </div>
           </div>

@@ -5,8 +5,10 @@ function userJoin(id, username, room) {
     
     const user = {
         id, 
+        socketId: id,
         username, 
         room,
+        isOnline: true,
         isReady : false,
         selectedCard: false,
         pickedCardIndex: -1,

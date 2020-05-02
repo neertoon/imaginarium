@@ -36,7 +36,7 @@ var GamesData = {
         return game;
     },
     
-    addPlayer: function(room, user) {
+    addPlayer: function(room, user, io) {
         const index = games.findIndex(game => game.room === room);
         let game = games[index];
         if (game.players.length == 0) {
@@ -44,6 +44,11 @@ var GamesData = {
         }
 
         game.players.push(user);
+        if (user.isReady) {
+            io.to(user.socketId).emit('phase', 'readyOn');
+        } else {
+            io.to(user.socketId).emit('phase', 'readyOff');
+        }
     },
     
     handleReadiness: async function(user, io) {
@@ -56,6 +61,12 @@ var GamesData = {
         }
 
         user.isReady = !(user.isReady);
+
+        if (user.isReady) {
+            io.to(user.socketId).emit('phase', 'readyOn');
+        } else {
+            io.to(user.socketId).emit('phase', 'readyOff');
+        }
         
         const userHost = game.players.filter(user => user.id === game.hostId)[0];
         
@@ -86,6 +97,7 @@ var GamesData = {
     
     addCardForVoting: async function(user, cardIndex, io) {
         if (user.pickedCardIndex !== -1) {
+            io.to(user.socketId).emit('gameWarning', {text: 'You already choose card for voting'});
             return false;
         }
         
@@ -111,7 +123,7 @@ var GamesData = {
             for (const playerIndex of game.players){
                 if (playerIndex.isStoryteller) {
                     playerIndex.votedCardIndex = playerIndex.pickedCardIndex;
-                    io.to(playerIndex.id).emit('phase', 'narrator');
+                    io.to(playerIndex.socketId).emit('phase', 'narrator');
                 } else {
                     playerIndex.selectedCard = false;    
                 }
@@ -140,6 +152,7 @@ var GamesData = {
                 points: playerIndex.points,
                 isHost: playerIndex.isHost,
                 isStoryteller: playerIndex.isStoryteller,
+                isOnline: playerIndex.isOnline
             };
             
             publicUsers.push(publicUser);
@@ -165,12 +178,12 @@ var GamesData = {
     voteForCard(user, cardIndex, io) {
         cardIndex = parseInt(cardIndex);
         if (user.votedCardIndex !== -1) {
-            io.to(user.id).emit('gameWarning', {text: 'You already choose card for voting', phase: 'voting'});
+            io.to(user.socketId).emit('gameWarning', {text: 'You already choose card for voting', phase: 'voting'});
             return false;
         }
 
         if (user.pickedCardIndex === cardIndex) {
-            io.to(user.id).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
+            io.to(user.socketId).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
             return false;
         }
 
@@ -281,7 +294,11 @@ var GamesData = {
         }
 
         for (const playerIndex of game.players) {
-            io.to(playerIndex.id).emit('gameCardsPack', playerIndex.cards);
+            io.to(playerIndex.socketId).emit('gameCardsPack', playerIndex.cards);
+            
+            if (playerIndex.isStoryteller) {
+                io.to(playerIndex.socketId).emit('phase', 'narrator');
+            }
         }
     },
     
@@ -319,6 +336,27 @@ var GamesData = {
         }
 
         return elements;
+    },
+    reconnect(user, io) {
+        const room = user.room;
+        const game = games.find(game => game.room === room);
+        
+        if (game.phase == this.phasePickingCard) {
+            io.to(user.socketId).emit('phase', 'selectCard');
+            io.to(user.socketId).emit('gameCardsPack', user.cards);
+        } else if (game.phase == this.phaseVoting) {
+            io.to(user.socketId).emit('phase', 'voting');
+            io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+        } else if (game.phase == this.phaseScore) {
+            io.to(user.socketId).emit('phase', 'scoring');
+            io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+        } else if (game.phase <= this.phaseSettingReady) {
+            if (user.isReady) {
+                io.to(user.socketId).emit('phase', 'readyOn');
+            } else {
+                io.to(user.socketId).emit('phase', 'readyOff');
+            }
+        }
     }
 }
 

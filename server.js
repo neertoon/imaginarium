@@ -7,6 +7,7 @@ const { userJoin, getCurrentUser, userLeave, getRoomUsers } = require('./utils/u
 const {insertCardPackMethod, clearAllCardsMethod} = require('./utils/cards');
 const GamesData = require('./utils/games');
 const fileUpload = require('express-fileupload');//https://attacomsian.com/blog/uploading-files-nodejs-express#
+var cookie = require('cookie');
 
 const app = express();
 const server = http.createServer(app);
@@ -25,16 +26,41 @@ const serverName = 'SERVER';
 
 // Run when client connect 
 io.on('connection', socket => {
+    var cookies = socket.handshake.headers.cookie ? cookie.parse(socket.handshake.headers.cookie) : {};
+    var actualUserId = socket.id;
+    if (cookies.hasOwnProperty('iduserb')) {
+        actualUserId = cookies.iduserb;
+    }
+    
     socket.on('joinRoom', async ({ username, room, password }) => {
+        if (cookies.hasOwnProperty('iduserb')) {
+            const user = getCurrentUser(actualUserId);
+            
+            if (!user) {
+                socket.emit('gameError', formatMessage(serverName, 'User does not exists'));
+                return;
+            }
+            
+            //Gdy użytkownika nie ma, to skasuj mu cookie może i wywal błąd co? Tu się nie da cookie puszczać, ale można puścić error
+            //I niech error zawsze kasuje cookie
+            
+            user.socketId = socket.id;
+            user.isOnline = true;
+            socket.join(user.room);
+            GamesData.reconnect(user, io);
+            sendUsers(user, io);
+            return;
+        }
+        
         if (!GamesData.canJoin(room) || password !== process.env.IPASSWORD) {
             socket.emit('gameError', formatMessage(serverName, 'CantJoinDude'));
             return;
         }
         
-        const user = userJoin(socket.id, username, room);
+        const user = userJoin(actualUserId, username, room);
         
         await GamesData.createGame(room);
-        GamesData.addPlayer(room, user); 
+        GamesData.addPlayer(room, user, io); 
         
         socket.join(user.room);
         
@@ -45,54 +71,59 @@ io.on('connection', socket => {
 
         sendUsers(user, io);
     });
+
+    socket.on('leaveRoom', () => {
+        const user = userLeave(actualUserId);
+
+        if (user) {
+            GamesData.userLeave(user.room, user.id);
+
+            sendUsers(user, io);
+
+            io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
+        }
+    });
+
+    
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
     socket.on('disconnect', () => {
-        const user = userLeave(socket.id);
+        const user = getCurrentUser(actualUserId);
         
         if (user) {
-            GamesData.userLeave(user.room, user.id);
+            //Jeszcze może by się przydała informacja dla innych że gracz się odłączył?
+            user.isOnline = false;
             
             sendUsers(user, io);
-            
-            io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
         } 
     });
     
     // Listen for chatMessages
     socket.on('chatMessage', (msg) => {
-        const user = getCurrentUser(socket.id);
+        const user = getCurrentUser(actualUserId);
         
         io.to(user.room).emit('message', formatMessage(user.username, msg));
     });
     
     // Listen for game join
     socket.on('gameUserReady', async (msg) => {
-        const user = getCurrentUser(socket.id);
+        const user = getCurrentUser(actualUserId);
         if (await !GamesData.handleReadiness(user, io)) {
             socket.emit('gameError', formatMessage(serverName, 'Cannot change ready state during game'));
-        }
-
-        if (user.isReady) {
-            socket.emit('phase', 'readyOn');
-        } else {
-            socket.emit('phase', 'readyOff');
         }
 
         sendUsers(user, io);
     });
     
-    socket.on('gamePickCard', (cardIndex) => {
+    socket.on('gamePickCard', async (cardIndex) => {
         if (!cardIndex && cardIndex !== 0) {
             let message = formatMessage(serverName, "You didn't choose anything");
             message['phase'] = 'selectCard';
             socket.emit('gameWarning', message);
             return;
         }
-        const user = getCurrentUser(socket.id);
-        if (!GamesData.addCardForVoting(user, cardIndex, io)) {
-            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
-        }
+        const user = getCurrentUser(actualUserId);
+        await GamesData.addCardForVoting(user, cardIndex, io);
 
         sendUsers(user, io);
     });
@@ -101,14 +132,14 @@ io.on('connection', socket => {
         if (!cardIndex && cardIndex !== 0) {
             socket.emit('gameWarning', formatMessage(serverName, "You didn't choose anything"));
         }
-        const user = getCurrentUser(socket.id);
+        const user = getCurrentUser(actualUserId);
         GamesData.voteForCard(user, cardIndex, io);
 
         sendUsers(user, io);
     });
 
     socket.on('gameNextRound', async (msg) => {
-        const user = getCurrentUser(socket.id);
+        const user = getCurrentUser(actualUserId);
         if (!await GamesData.nextRound(user, io)) {
             socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
         }
@@ -133,9 +164,11 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 function sendUsers(user, io) {
+    var usersy = GamesData.getUsersForClient(user.room);
+    
     io.to(user.room).emit('roomUsers', {
         room: user.room,
-        users: GamesData.getUsersForClient(user.room)
+        users:usersy 
     });
 }
 

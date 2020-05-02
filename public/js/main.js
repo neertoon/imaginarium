@@ -28,10 +28,15 @@ socket.on('message', message => {
     outputMessage(message);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (!getCookie('iduserb') && message.text === 'Welcome to The Game') {
+        setCookie('iduserb', socket.json.id, 1);
+    }
 });
 
 socket.on('gameError', message => {
     console.log(message.text);
+    setCookie('iduserb', '', -1);
     alert(message.text);
     window.location = '/';
 });
@@ -50,23 +55,35 @@ socket.on('gameWarning', message => {
 
 socket.on('phase', message => {
     if (message == 'selectCard') {
-        $('#btnSetReady').hide();
+        $('.game-item-showhide').hide();
+        // $('#btnSetReady').hide();
         $('#btnChooseCard').show();
         $('#game-users-title').html('Selecting cards');
     } else if (message == 'readyOn') {
+        $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', '#5cb85c');
+        $('#btnSetReady').show();
     } else if (message == 'readyOff') {
+        $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', 'darksalmon');
+        $('#btnSetReady').show();
     } else if (message == 'voting') {
+        $('.game-item-showhide').hide();
+        // $('#btnSetReady').hide();
         $('#game-users-title').html('Voting');
-        $('#btnChooseCard').hide();
+        // $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
+        $('.game-item-showhide').hide();
+        // $('#btnSetReady').hide();
         $('#game-users-title').html('Summary');
-        $('#btnVoteForCard').hide();
+        // $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
     } else if (message == 'narrator') {
         $('#btnVoteForCard').hide();
+        let upperPanel = $('#game-area-info');
+        upperPanel.show();
+        upperPanel.html('You are now storyteller');
     }
 });
 
@@ -114,7 +131,7 @@ function outputUsers(users) {
     userTable.html(`
         ${users.map(user => `<tr>
             <td ${user.isHost ? 'style="color: red;"' : ''}>${user.isStoryteller ? 'N:' : ''}${user.username}</td>
-            <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}</td>
+            <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}${user.isOnline ? '' : '<i class="fas fa-wifi"></i>'}</td>
             <td>${user.points}</td>
         </tr>`).join('')}
     `);
@@ -157,6 +174,11 @@ const Game = {
         socket.emit('gameNextRound', 'NEXT');
         var element = $(event.target);
         element.hide();
+    },
+    leave :function() {
+        setCookie('iduserb', '', -1);
+        socket.emit('leaveRoom', 'ok');
+        window.location = '/';
     }
 };
 
@@ -188,6 +210,27 @@ function prevCard(cardIndexHolder){
         Game.selectCard($(cards[prevCardIndex]), cardIndexHolder);
 }
 
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 function setHeightHack(){
     let cards = $('#player-cards').children();
     let containerWidth = $('#player-cards').width();
