@@ -36,7 +36,7 @@ var GamesData = {
         return game;
     },
     
-    addPlayer: function(room, user) {
+    addPlayer: function(room, user, io) {
         const index = games.findIndex(game => game.room === room);
         let game = games[index];
         if (game.players.length == 0) {
@@ -44,6 +44,11 @@ var GamesData = {
         }
 
         game.players.push(user);
+        if (user.isReady) {
+            io.to(user.socketId).emit('phase', 'readyOn');
+        } else {
+            io.to(user.socketId).emit('phase', 'readyOff');
+        }
     },
     
     handleReadiness: async function(user, io) {
@@ -340,6 +345,12 @@ var GamesData = {
         } else if (game.phase == this.phaseScore) {
             io.to(user.socketId).emit('phase', 'scoring');
             io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+        } else if (game.phase <= this.phaseSettingReady) {
+            if (user.isReady) {
+                io.to(user.socketId).emit('phase', 'readyOn');
+            } else {
+                io.to(user.socketId).emit('phase', 'readyOff');
+            }
         }
     }
 }

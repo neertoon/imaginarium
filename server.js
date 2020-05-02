@@ -60,7 +60,7 @@ io.on('connection', socket => {
         const user = userJoin(actualUserId, username, room);
         
         await GamesData.createGame(room);
-        GamesData.addPlayer(room, user); 
+        GamesData.addPlayer(room, user, io); 
         
         socket.join(user.room);
         
