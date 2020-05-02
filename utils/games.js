@@ -298,6 +298,8 @@ var GamesData = {
             
             if (playerIndex.isStoryteller) {
                 io.to(playerIndex.socketId).emit('phase', 'narrator');
+            }else{
+                io.to(playerIndex.socketId).emit('phase', 'someoneElseNarrator:' + game.players.find((el)=>el.isStoryteller).username);
             }
         }
     },
