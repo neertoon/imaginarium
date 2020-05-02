@@ -258,6 +258,21 @@ $(window).on('resize', function(){
     setHeightHack();
     preventTooHighSpotlight();
 });
+
+var observer = new MutationObserver(function(mutations) {
+      if($('#btnChooseCard').css('display') == 'none' && 
+        $('#btnChooseCard').css('display') == 'none' && 
+        $('#btnVoteForCard').css('display') == 'none' && 
+        $('#btnSeenScoring').css('display') == 'none')
+        $('#wait-label').show();
+      else
+        $('#wait-label').hide();
+});
+observer.observe(document.getElementById('btnSetReady'), { attributes : true, attributeFilter : ['style'] });
+observer.observe(document.getElementById('btnChooseCard'), { attributes : true, attributeFilter : ['style'] });
+observer.observe(document.getElementById('btnVoteForCard'), { attributes : true, attributeFilter : ['style'] });
+observer.observe(document.getElementById('btnSeenScoring'), { attributes : true, attributeFilter : ['style'] });
+
 // #endregion layout
 
 
