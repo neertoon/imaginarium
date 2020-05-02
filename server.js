@@ -115,7 +115,7 @@ io.on('connection', socket => {
         sendUsers(user, io);
     });
     
-    socket.on('gamePickCard', (cardIndex) => {
+    socket.on('gamePickCard', async (cardIndex) => {
         if (!cardIndex && cardIndex !== 0) {
             let message = formatMessage(serverName, "You didn't choose anything");
             message['phase'] = 'selectCard';
@@ -123,7 +123,7 @@ io.on('connection', socket => {
             return;
         }
         const user = getCurrentUser(actualUserId);
-        GamesData.addCardForVoting(user, cardIndex, io);
+        await GamesData.addCardForVoting(user, cardIndex, io);
 
         sendUsers(user, io);
     });
