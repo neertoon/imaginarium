@@ -56,6 +56,12 @@ var GamesData = {
         }
 
         user.isReady = !(user.isReady);
+
+        if (user.isReady) {
+            io.to(user.socketId).emit('phase', 'readyOn');
+        } else {
+            io.to(user.socketId).emit('phase', 'readyOff');
+        }
         
         const userHost = game.players.filter(user => user.id === game.hostId)[0];
         

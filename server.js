@@ -112,12 +112,6 @@ io.on('connection', socket => {
             socket.emit('gameError', formatMessage(serverName, 'Cannot change ready state during game'));
         }
 
-        if (user.isReady) {
-            socket.emit('phase', 'readyOn');
-        } else {
-            socket.emit('phase', 'readyOff');
-        }
-
         sendUsers(user, io);
     });
     
