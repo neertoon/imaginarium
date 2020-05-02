@@ -123,9 +123,7 @@ io.on('connection', socket => {
             return;
         }
         const user = getCurrentUser(actualUserId);
-        if (!GamesData.addCardForVoting(user, cardIndex, io)) {
-            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
-        }
+        GamesData.addCardForVoting(user, cardIndex, io);
 
         sendUsers(user, io);
     });

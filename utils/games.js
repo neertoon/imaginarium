@@ -97,6 +97,7 @@ var GamesData = {
     
     addCardForVoting: async function(user, cardIndex, io) {
         if (user.pickedCardIndex !== -1) {
+            io.to(user.socketId).emit('gameWarning', {text: 'You already choose card for voting'});
             return false;
         }
         
