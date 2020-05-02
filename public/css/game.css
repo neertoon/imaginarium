@@ -225,11 +225,13 @@ body {
 
 #spotlight-selected-card {
     position: relative;
+    touch-action: none;
     
     width: 85%; 
     margin-left: -70%;
     margin-right: -70%;
     z-index: 2;
+    border: 1px solid white;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 

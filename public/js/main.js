@@ -256,3 +256,15 @@ $(window).on('resize', function(){
     preventTooHighSpotlight();
 });
 
+
+$.event.special.swipe.scrollSupressionThreshold = 30;
+$(function(){
+    $( "#spotlight-view-wrapper" ).on( "swipeleft", swipeLeftHandler );
+    $( "#spotlight-view-wrapper" ).on( "swiperight", swipeRightHandler );
+    function swipeLeftHandler( event ){
+        nextCard($('#selected-card-index'));
+    }
+    function swipeRightHandler( event ){
+        prevCard($('#selected-card-index'));
+    }
+  });
