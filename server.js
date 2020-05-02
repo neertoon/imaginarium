@@ -53,7 +53,7 @@ io.on('connection', socket => {
         }
         
         if (!GamesData.canJoin(room) || password !== process.env.IPASSWORD) {
-            socket.emit('gameError', formatMessage(serverName, 'CantJoinDude'));
+            socket.emit('gameError', formatMessage(serverName, 'You cannot join'));
             return;
         }
         

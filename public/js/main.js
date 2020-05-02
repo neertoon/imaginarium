@@ -37,12 +37,12 @@ socket.on('message', message => {
 socket.on('gameError', message => {
     console.log(message.text);
     setCookie('iduserb', '', -1);
-    alert(message.text);
+    alert(trnslt(message.text));
     window.location = '/';
 });
 
 socket.on('gameWarning', message => {
-    alert(message.text);
+    alert(trnslt(message.text));
     
     if (message.hasOwnProperty('phase')) {
         if (message.phase === 'voting') {
@@ -70,20 +70,20 @@ socket.on('phase', message => {
     } else if (message == 'voting') {
         $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
-        $('#game-area-info').html('Voting');
+        $('#game-area-info').html(trnslt('Voting'));
         // $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
         $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
-        $('#game-area-info').html('Summary');
+        $('#game-area-info').html(trnslt('Summary'));
         // $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
     } else if (message == 'narrator') {
         $('#btnVoteForCard').hide();
-        $('#game-area-info').html('Tell your story to others and pick a card');
+        $('#game-area-info').html(trnslt('Tell your story to others and pick a card'));
     }else if (message.startsWith('someoneElseNarrator:')) {
-        $('#game-area-info').html('Listen to ' + message.substr(20) + ', then pick a card');
+        $('#game-area-info').html(trnslt('Listen to ') + message.substr(20) + trnslt(', then pick a card'));
     }
 });
 
@@ -320,3 +320,13 @@ $(function(){
     e.preventDefault(); 
 });
 // #endregion user input 
+
+// #region translations
+$('#btnSetReady').html(trnslt('Set ready'));
+$('#btnChooseCard').html(trnslt('Select card'));
+$('#btnVoteForCard').html(trnslt('Vote'));
+$('#btnSeenScoring').html(trnslt('Next round'));
+$('#wait-label').html(trnslt('Wait for other players'));
+$('#players-label').html(trnslt('Players'));
+
+// #endregion translations 

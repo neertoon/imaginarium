@@ -21,7 +21,7 @@
 			<main class="join-main">
 				<form action="game.html">
 					<div class="form-control">
-						<label for="username">Username</label>
+						<label id="username-label" for="username">Username</label>
 						<input
 							type="text"
 							name="username"
@@ -31,7 +31,7 @@
 						/>
 					</div>
                     <div class="form-control">
-                        <label for="username">Password</label>
+                        <label id="password-label" for="username">Password</label>
                         <input
                                 type="password"
                                 name="password"
@@ -41,7 +41,7 @@
                         />
                     </div>
 					<div class="form-control">
-						<label for="room">Room</label>
+						<label id="room-label" for="room">Room</label>
 						<select name="room" id="room">
 							<option value="Magnolia">Magnolia</option>
 							<option value="Rose">Rose</option>
@@ -51,9 +51,20 @@
 							<option value="Topaz">Topaz</option>
 						</select>
 					</div>
-					<button type="submit" class="btn">Join Chat</button>
+					<button id="join-button" type="submit" class="btn">Join Chat</button>
 				</form>
 			</main>
 		</div>
+		<script src="https://code.jquery.com/jquery-3.5.0.min.js" integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+		<script src="js/translator.js"></script>
+		<script>
+			
+			$('#username-label').html(trnslt('Your name'));
+			$('#username').attr('placeholder',trnslt('Enter name...'));
+			$('#password-label').html(trnslt('Password'));
+			$('#password').attr('placeholder',trnslt('Enter game password...'));
+			$('#room-label').html(trnslt('Room'));
+			$('#join-button').html(trnslt('Enter game'));
+		</script>
 	</body>
 </html>

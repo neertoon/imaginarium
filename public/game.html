@@ -98,14 +98,14 @@
                   <a id="btnChooseCard" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.sendPickedCard(event, $('#selected-card-index').val())" style="display: none;">Choose card</a>
                   <a id="btnVoteForCard" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.voteForCard(event, $('#selected-card-index').val())" style="display: none; ">Vote</a>
                   <a id="btnSeenScoring" href="" class="btn btn-action-bottom game-btn-normal-style game-item-showhide" onclick="Game.nextRound(event)" style="display: none;">Next round</a>
-                  <p id="wait-label" class="btn btn-action-bottom" style="display:none">Wait for other players</p>
+                  <p id="wait-label" class="btn btn-action-bottom" style="display:none;">Wait for other players</p>
                   <input id="selected-card-index" type="hidden" value="" />
               </div>
           </div>
     
           <div id="game-users-area" class="d-none d-md-block col-md-3">
               <button id="game-user-toggle" onclick="toggleUsers();"><i class="fas fa-users"></i></button>
-              <h2>Players</h2>
+              <h2 id="players-label">Players</h2>
               <table id="game-user-table">
                   <tr>
                       <td>
@@ -129,6 +129,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   <script src="/socket.io/socket.io.js"></script>
+  <script src="js/translator.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
