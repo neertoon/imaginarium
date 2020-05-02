@@ -97,6 +97,7 @@ body {
 
 .imaginarium-menu {
     height: 60px;
+    text-align: center;
 }
 
 .imaginarium-actions {
@@ -291,6 +292,27 @@ body {
     box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.75);
     z-index: 999;
     cursor: pointer;
+}
+
+#game-area-info {
+    opacity: 0.7;
+    margin: auto;
+    padding: 10px;
+    width: 80%;
+    border: 1px solid #592333;
+    border-radius: 5px;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 13px;
+    
+    color: #fff155;
+
+    background: #994964; /* Old browsers */
+    background: -moz-linear-gradient(top,  #994964 0%, #993757 48%, #994964 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,  #994964 0%,#993757 48%,#994964 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,  #994964 0%,#993757 48%,#994964 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#994964', endColorstr='#994964',GradientType=0 ); /* IE6-9 */
+    
 }
 
 @media (max-width: 768px) {

@@ -54,30 +54,36 @@ socket.on('gameWarning', message => {
 });
 
 socket.on('phase', message => {
-    $('.game-item-showhide').hide();
-    
     if (message == 'selectCard') {
+        $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
         $('#btnChooseCard').show();
         $('#game-users-title').html('Selecting cards');
     } else if (message == 'readyOn') {
+        $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', '#5cb85c');
         $('#btnSetReady').show();
     } else if (message == 'readyOff') {
+        $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', 'darksalmon');
         $('#btnSetReady').show();
     } else if (message == 'voting') {
+        $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
         $('#game-users-title').html('Voting');
         // $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
+        $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
         $('#game-users-title').html('Summary');
         // $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
     } else if (message == 'narrator') {
         $('#btnVoteForCard').hide();
+        let upperPanel = $('#game-area-info');
+        upperPanel.show();
+        upperPanel.html('You are now storyteller');
     }
 });
 

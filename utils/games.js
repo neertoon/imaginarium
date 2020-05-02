@@ -295,6 +295,10 @@ var GamesData = {
 
         for (const playerIndex of game.players) {
             io.to(playerIndex.socketId).emit('gameCardsPack', playerIndex.cards);
+            
+            if (playerIndex.isStoryteller) {
+                io.to(playerIndex.socketId).emit('phase', 'narrator');
+            }
         }
     },
     
