@@ -231,6 +231,8 @@ function getCookie(cname) {
     }
     return "";
 }
+
+// #region layout
 function setHeightHack(){
     let cards = $('#player-cards').children();
     let containerWidth = $('#player-cards').width();
@@ -251,10 +253,24 @@ function preventTooHighSpotlight(){
     }, 0);
 }
 
+
 $(window).on('resize', function(){
     setHeightHack();
     preventTooHighSpotlight();
 });
+// #endregion layout
+
+
+// #region user input 
+function executeAvailableAction(){
+    if($('#btnChooseCard').css('display') != 'none')
+        $('#btnChooseCard').trigger('click');
+    else if($('#btnVoteForCard').css('display') != 'none')
+        $('#btnVoteForCard').trigger('click');
+    else if($('#btnSeenScoring').css('display') != 'none')
+        $('#btnSeenScoring').trigger('click');
+}
+
 
 
 $.event.special.swipe.scrollSupressionThreshold = 30;
@@ -268,3 +284,22 @@ $(function(){
         prevCard($('#selected-card-index'));
     }
   });
+
+  $(document).keydown(function(e) {
+    switch(e.which) {
+        case 37: // left
+        prevCard($('#selected-card-index'));
+        break;
+        case 39: // right
+        nextCard($('#selected-card-index'));
+        break;
+        case 0://spacja
+        case 32://spacja(firefox)
+        case 13://enter
+        executeAvailableAction();
+        break;
+        default: return; 
+    }
+    e.preventDefault(); 
+});
+// #endregion user input 
