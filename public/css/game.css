@@ -100,7 +100,8 @@ body {
 }
 
 .imaginarium-actions {
-    height: 60px;
+    height: 50px;
+    margin-top: 10px;
 }
 
 .imaginarium-game {
@@ -200,49 +201,53 @@ body {
     width: 15%;
 }
 
+#spotlight-view-wrapper{
+    flex-grow: 1;
+    align-self: center;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #spotlight-view {
     overflow: hidden;
-    margin: 0 auto;
-    width: 330px;
-    flex-grow: 1;
+    width: 100%;
 }
 
 
 #spotlight-selected-card {
     position: relative;
-    box-shadow: 5px;
-    width: 200px; 
-    height: 300px;
-    margin: 0 -122px 10px -122px;
+    
+    width: 85%; 
+    margin-left: -70%;
+    margin-right: -70%;
     z-index: 2;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
 #spotlight-left-card {
     position: relative;
-    width: 150px; 
-    height: 250px;
-    margin: 0 5px 10px -150px;
+    width: 75%; 
     z-index: 1;
 }
 
 #spotlight-right-card {
     position: relative;
-    width: 150px; 
-    height: 250px;
-    margin: 0 -150px 10px 5px;
+    width: 75%; 
     z-index: 1;
 }
 
 #player-cards {
-
+    flex-shrink: 0;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
 .game-card {
-    
   flex: 0 1 15%; /* explanation below */
   margin: 1px;
 }
