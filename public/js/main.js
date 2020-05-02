@@ -83,7 +83,7 @@ socket.on('phase', message => {
         $('#btnVoteForCard').hide();
         $('#game-area-info').html(trnslt('Tell your story to others and pick a card'));
     }else if (message.startsWith('someoneElseNarrator:')) {
-        $('#game-area-info').html(trnslt('Listen to ') + message.substr(20) + trnslt(', then pick a card'));
+        $('#game-area-info').html(trnslt('Listen to player ') + message.substr(20) + trnslt(', then pick a card'));
     }
 });
 

@@ -22,7 +22,7 @@ const plKeys = {
     "Voting":'Głosowanie',
     "Summary":'Podsumowanie',
     "Tell your story to others and pick a card":'Opowiedz innym swoją historię i wybierz kartę',
-    "Listen to ":'Posłuchaj ',
+    "Listen to player ":'Posłuchaj gracza ',
     ", then pick a card":', a następnie wybierz kartę',
     "Your name":'Twoja nazwa',
     "Enter name...":'Podaj nazwę...',
