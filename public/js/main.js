@@ -80,6 +80,8 @@ socket.on('gameCardsPack', cardsPack => {
     });
     let firstItem = $($('#player-cards').children()[0]);
     Game.selectCard(firstItem, $('#selected-card-index'));
+    setHeightHack();
+    preventTooHighSpotlight();
 });
 
 chatForm.addEventListener('submit', (e) => {
@@ -185,3 +187,29 @@ function prevCard(cardIndexHolder){
     else
         Game.selectCard($(cards[prevCardIndex]), cardIndexHolder);
 }
+
+function setHeightHack(){
+    let cards = $('#player-cards').children();
+    let containerWidth = $('#player-cards').width();
+    let twoRowsMode = cards.length > 6;
+    for(let i = 0; i < cards.length; i++){
+        let card = cards[i];
+        $(card).height(containerWidth / 6 * (twoRowsMode ? 0.7 : 1.4));
+    }
+}
+
+
+function preventTooHighSpotlight(){
+    setTimeout(function (){
+        let gameAreaWidth = $('#game-play-area').width();
+        let windowHeight = $(window).height();
+        let maxHeight = windowHeight - $('.imaginarium-menu').height() - $('#player-cards').height() -$('.imaginarium-actions').height();
+        $('#spotlight-view-wrapper').css('maxWidth', (maxHeight * 0.64) + 'px');
+    }, 0);
+}
+
+$(window).on('resize', function(){
+    setHeightHack();
+    preventTooHighSpotlight();
+});
+

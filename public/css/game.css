@@ -80,7 +80,8 @@ body {
      
      */
 
-
+    display:flex;
+    flex-direction: column;
 
     background-color: #FBAB7E;
     background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);
@@ -95,16 +96,21 @@ body {
 }
 
 .imaginarium-menu {
-    height: 80px;
+    height: 60px;
 }
 
 .imaginarium-actions {
-    height: 100px;
+    height: 63px;
+    margin-top: 3px;
 }
 
 .imaginarium-game {
     height: calc(100% - 180px);
     text-align: center;
+    flex-grow:1;
+
+    display:flex;
+    flex-direction: column;
 }
 
 .btn-action-bottom {
@@ -195,47 +201,55 @@ body {
     width: 15%;
 }
 
+#spotlight-view-wrapper{
+    flex-grow: 1;
+    align-self: center;
+    width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 #spotlight-view {
     overflow: hidden;
-    margin: 0 auto;
-    width: 330px;
+    width: 100%;
 }
 
 
 #spotlight-selected-card {
     position: relative;
-    box-shadow: 5px;
-    width: 250px; 
-    height: 400px;
-    margin: 0 -172px 10px -172px;
+    
+    width: 85%; 
+    margin-left: -70%;
+    margin-right: -70%;
     z-index: 2;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
 #spotlight-left-card {
     position: relative;
-    width: 200px; 
-    height: 350px;
-    margin: 0 5px 10px -200px;
+    width: 75%; 
     z-index: 1;
 }
 
 #spotlight-right-card {
     position: relative;
-    width: 200px; 
-    height: 350px;
-    margin: 0 -200px 10px 5px;
+    width: 75%; 
     z-index: 1;
 }
 
 #player-cards {
-    bottom: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .game-card {
-    width: 40px; 
-    height: 50px;
-    margin: 1px;
+  flex: 0 1 15%; /* explanation below */
+  margin: 1px;
 }
 
 .game-card.selected {
