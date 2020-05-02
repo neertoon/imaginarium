@@ -121,7 +121,7 @@ function outputUsers(users) {
     userTable.html(`
         ${users.map(user => `<tr>
             <td ${user.isHost ? 'style="color: red;"' : ''}>${user.isStoryteller ? 'N:' : ''}${user.username}</td>
-            <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}</td>
+            <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}${user.isOnline ? '' : '<i class="fas fa-wifi"></i>'}</td>
             <td>${user.points}</td>
         </tr>`).join('')}
     `);

@@ -45,6 +45,7 @@ io.on('connection', socket => {
             //I niech error zawsze kasuje cookie
             
             user.socketId = socket.id;
+            user.isOnline = true;
             socket.join(user.room);
             GamesData.reconnect(user, io);
             sendUsers(user, io);
@@ -87,16 +88,13 @@ io.on('connection', socket => {
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
     socket.on('disconnect', () => {
-        return; //Tutaj ma byc obsluga braku gracza, jakieś info, że go brakuje
-        const user = userLeave(actualUserId);
-        console.log(user);
+        const user = getCurrentUser(actualUserId);
         
         if (user) {
-            GamesData.userLeave(user.room, user.id);
+            //Jeszcze może by się przydała informacja dla innych że gracz się odłączył?
+            user.isOnline = false;
             
             sendUsers(user, io);
-            
-            io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
         } 
     });
     

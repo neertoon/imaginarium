@@ -186,6 +186,10 @@ body {
     color: chartreuse;
 }
 
+#game-users-area table td .fa-wifi {
+    color: red;
+}
+
 #game-users-area table td:first-child {
     text-overflow: ellipsis;
     overflow: hidden;

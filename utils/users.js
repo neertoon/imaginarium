@@ -8,6 +8,7 @@ function userJoin(id, username, room) {
         socketId: id,
         username, 
         room,
+        isOnline: true,
         isReady : false,
         selectedCard: false,
         pickedCardIndex: -1,

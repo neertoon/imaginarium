@@ -140,6 +140,7 @@ var GamesData = {
                 points: playerIndex.points,
                 isHost: playerIndex.isHost,
                 isStoryteller: playerIndex.isStoryteller,
+                isOnline: playerIndex.isOnline
             };
             
             publicUsers.push(publicUser);
