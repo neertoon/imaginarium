@@ -204,6 +204,7 @@ body {
     overflow: hidden;
     margin: 0 auto;
     width: 330px;
+    flex-grow: 1;
 }
 
 
@@ -234,18 +235,16 @@ body {
 }
 
 #player-cards {
-    flex-grow: 1;
-    background-color: lightseagreen;
 
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .game-card {
     
-  flex: 1 0 2%; /* explanation below */
+  flex: 0 1 15%; /* explanation below */
   margin: 1px;
-  background-color: blue;
 }
 
 .game-card.selected {

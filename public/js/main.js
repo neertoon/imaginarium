@@ -192,6 +192,10 @@ function setHeightHack(){
     let containerWidth = $('#player-cards').width();
     for(let i = 0; i < cards.length; i++){
         let card = cards[i];
-        $(card).height(containerWidth / 6 * 1.5);
+        $(card).height(containerWidth / 6 * 1.4);
     }
 }
+
+$(window).on('resize', function(){
+    setHeightHack();
+});
