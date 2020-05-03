@@ -100,12 +100,11 @@ body {
 }
 
 .imaginarium-actions {
-    height: 75px;
+    height: 90px;
     margin-top: 2px;
 }
 
 .imaginarium-game {
-    height: calc(100% - 180px);
     text-align: center;
     flex-grow:1;
 
