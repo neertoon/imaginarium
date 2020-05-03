@@ -53,6 +53,19 @@ socket.on('gameWarning', message => {
     }
 });
 
+socket.on('summary', summaryJson => {
+    let summaryObject = JSON.parse(summaryJson);
+    let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
+    storyTellerCard.addClass('correct-card');
+    if(summaryObject.allVotedOnStoryteller)
+        alert(trnslt('FAIL! Everyone voted on storyteller card! +2 points for everyone except him!'));
+    else if(summaryObject.noneVotedOnStoryteller)
+        alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
+    else{
+        //TODO: logika rozdzielania punktów
+    }
+});
+
 socket.on('phase', message => {
     if (message == 'selectCard') {
         $('.game-item-showhide').hide();
@@ -139,6 +152,10 @@ function outputUsers(users) {
 
 function setSpotlightCards(selectedCard){
     $('#spotlight-selected-card').attr('src', selectedCard.attr('src'));
+    if(selectedCard.hasClass('correct-card'))
+        $('#spotlight-selected-card').addClass('correct-card');
+    else
+        $('#spotlight-selected-card').removeClass('correct-card');
     $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
     $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }
@@ -184,10 +201,13 @@ const Game = {
 
 function toggleUsers() {
     let userArea = $('#game-users-area');
+    let gameuserleave = $('#game-user-leave');
     if (userArea.hasClass('showed')) {
-        userArea.removeClass('showed');    
+        userArea.removeClass('showed');  
+        gameuserleave.show(); 
     } else {
         userArea.addClass('showed');
+        gameuserleave.hide();
     }
     
 }

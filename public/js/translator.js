@@ -34,6 +34,8 @@ const plKeys = {
     "User does not exists" : 'Użytkownik nie istnieje',
     "You didn't choose anything" : 'Nic nie wybrałeś',
     "You already chose card for voting" : 'Już wybrałes wcześniej kartę do głosowania',
-    "You cannot vote for your card" : 'Nie możesz zagłosować na swoją kartę'
+    "You cannot vote for your card" : 'Nie możesz zagłosować na swoją kartę',
+    "FAIL! Everyone voted on storyteller card! +2 points for everyone except him!" : 'WTOPA! Wszyscy zagłosowali na kartę narratora! +2 punkty dla wszystkich oprócz niego!',
+    "FAIL! Nobody voted on storyteller card! +2 points for everyone except him!" : 'WTOPA! Nikt nie zagłosował na kartę narratora! +2 punkty dla wszystkich oprócz niego!'
 };
 
