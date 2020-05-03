@@ -197,6 +197,22 @@ var GamesData = {
         const usersThatVoted = game.players.filter(user => user.selectedCard === true);
 
         if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
+            let summaryObject = { 
+                storyTellerCardIndex: -1,
+                storyTellerName: '',
+                allVotedOnStoryteller: false,
+                noneVotedOnStoryteller: false,
+                cardOwners:{},
+                votes:{}
+            };
+            game.players.forEach(player=> {
+                summaryObject.cardOwners[player.username] = player.pickedCardIndex;
+                if(player.isStoryteller){
+                    summaryObject.storyTellerCardIndex = player.pickedCardIndex;
+                    summaryObject.storyTellerName = player.username;
+                }
+            });
+
             const storyTeller = game.players.find(user => user.isStoryteller === true);
             const playersThatFoundStorytellerCard = game.players.filter(userki => userki.votedCardIndex === storyTeller.pickedCardIndex);
             const playersNotVotedForStoryteller = game.players.filter(userki => userki.votedCardIndex !== storyTeller.pickedCardIndex);
@@ -208,14 +224,21 @@ var GamesData = {
                     }
                     player.points += 2;
                 }
+                if(playersThatFoundStorytellerCard.length === 1)
+                    summaryObject.noneVotedOnStoryteller = true;
+                else
+                    summaryObject.allVotedOnStoryteller = true;
             } else {
                 for (const player of playersThatFoundStorytellerCard){
                     player.points += 3;
+                    if(!player.isStoryteller)
+                        summaryObject.votes[player.username] = 'votedOnStoryteller';
                 }
                 
                 let playersWithExtaPoints = {};
                 for (const player of playersNotVotedForStoryteller) {
                     let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === player.votedCardIndex);
+                    summaryObject.votes[player.username] = player.votedCardIndex;
                     if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
                         playersWithExtaPoints[playerToGetAnotherPoints.id] = 0;
                     } else if (playersWithExtaPoints[playerToGetAnotherPoints.id] === 3) {
@@ -232,6 +255,10 @@ var GamesData = {
             for (const playerIndex of game.players){
                 playerIndex.selectedCard = false;
             }
+            
+
+            io.to(room).emit('summary', JSON.stringify(summaryObject));
+            
 
             //TUTAJ TRZEBA WYSLAC KARTY Z INFORMACJA KTO NA KOGO GLOSOWAL I TRZEBA PUNKTY PODLICZYC
             //BRAKUJE INFO, KTO JEST W TYM ROZADNIU NARATOREM
