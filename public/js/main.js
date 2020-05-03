@@ -184,10 +184,13 @@ const Game = {
 
 function toggleUsers() {
     let userArea = $('#game-users-area');
+    let gameuserleave = $('#game-user-leave');
     if (userArea.hasClass('showed')) {
-        userArea.removeClass('showed');    
+        userArea.removeClass('showed');  
+        gameuserleave.show(); 
     } else {
         userArea.addClass('showed');
+        gameuserleave.hide();
     }
     
 }
