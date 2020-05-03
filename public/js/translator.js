@@ -33,6 +33,7 @@ const plKeys = {
     "You cannot join" : 'Nie możesz dołączyć',
     "User does not exists" : 'Użytkownik nie istnieje',
     "You didn't choose anything" : 'Nic nie wybrałeś',
-    "You already choose card for voting" : 'Już wybrałes wcześniej kartę do głosowania'
+    "You already chose card for voting" : 'Już wybrałes wcześniej kartę do głosowania',
+    "You cannot vote for your card" : 'Nie możesz zagłosować na swoją kartę'
 };
 

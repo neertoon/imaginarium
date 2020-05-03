@@ -141,7 +141,7 @@ io.on('connection', socket => {
     socket.on('gameNextRound', async (msg) => {
         const user = getCurrentUser(actualUserId);
         if (!await GamesData.nextRound(user, io)) {
-            socket.emit('gameWarning', formatMessage(serverName, 'You already choose card for voting'));
+            socket.emit('gameWarning', formatMessage(serverName, 'You already chose card for voting'));
         }
 
         sendUsers(user, io);
