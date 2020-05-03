@@ -105,7 +105,6 @@ body {
 }
 
 .imaginarium-game {
-    height: calc(100% - 180px);
     text-align: center;
     flex-grow:1;
 
