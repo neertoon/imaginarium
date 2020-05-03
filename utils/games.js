@@ -346,6 +346,7 @@ var GamesData = {
         if (game.phase == this.phasePickingCard) {
             io.to(user.socketId).emit('phase', 'selectCard');
             io.to(user.socketId).emit('gameCardsPack', user.cards);
+            io.to(user.socketId).emit('phase', user.isStoryteller ? 'narrator' : ('someoneElseNarrator:' + game.players.find(x=>x.isStoryteller).username));
         } else if (game.phase == this.phaseVoting) {
             io.to(user.socketId).emit('phase', 'voting');
             io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
