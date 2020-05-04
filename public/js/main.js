@@ -57,12 +57,21 @@ socket.on('summary', summaryJson => {
     let summaryObject = JSON.parse(summaryJson);
     let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
     storyTellerCard.addClass('correct-card');
+
     if(summaryObject.allVotedOnStoryteller)
         alert(trnslt('FAIL! Everyone voted on storyteller card! +2 points for everyone except him!'));
     else if(summaryObject.noneVotedOnStoryteller)
         alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
     else{
-        //TODO: logika rozdzielania punktów
+        let correctPlayers = Object.keys(Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v == 'votedOnStoryteller')));
+        let resultString = trnslt('Correct votes: ') + correctPlayers.join(', ');
+        // let incorrectPlayers = Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v != 'votedOnStoryteller'));
+        // for(let i = 0; i < incorrectPlayers.length; i++){
+        //     resultString += '\r\n';
+        //     resultString += incorrectPlayers[i].key() + trnslt(' voted for ');
+        //     let votedName = incorrectPlayersNames[summaryObject.cardOwners];
+        // }
+        alert(resultString);
     }
 });
 
