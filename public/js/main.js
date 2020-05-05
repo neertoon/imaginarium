@@ -63,15 +63,9 @@ socket.on('summary', summaryJson => {
     else if(summaryObject.noneVotedOnStoryteller)
         alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
     else{
-        let correctPlayers = Object.keys(Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v == 'votedOnStoryteller')));
-        let resultString = trnslt('Correct votes: ') + correctPlayers.join(', ');
-        // let incorrectPlayers = Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v != 'votedOnStoryteller'));
-        // for(let i = 0; i < incorrectPlayers.length; i++){
-        //     resultString += '\r\n';
-        //     resultString += incorrectPlayers[i].key() + trnslt(' voted for ');
-        //     let votedName = incorrectPlayersNames[summaryObject.cardOwners];
-        // }
-        alert(resultString);
+        
+
+        summaryAlert(summaryObject);
     }
 });
 
@@ -134,6 +128,23 @@ chatForm.addEventListener('submit', (e) => {
     e.target.elements.msg.value = '';
     e.target.elements.msg.focus();
 });
+
+function summaryAlert(summaryObject) {
+    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
+    let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
+    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
+    incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
+    let previousVoteTarget = null;
+    for (const incorrectPlayer of incorrectPlayers) {
+        if (previousVoteTarget != incorrectPlayer.voteName) {
+            resultString += '\r\n\r\n';
+            resultString += incorrectPlayer.voteName + trnslt(' got vote from: ');
+        }
+        resultString += incorrectPlayer.name + ', ';
+        previousVoteTarget = incorrectPlayer.voteName;
+    }
+    alert(resultString);
+}
 
 function outputMessage(message) {
     const div = document.createElement('div');
