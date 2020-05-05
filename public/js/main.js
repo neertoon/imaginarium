@@ -184,7 +184,11 @@ function setSpotlightCards(selectedCard){
         $('#spotlight-selected-card').addClass('correct-card');
     else
         $('#spotlight-selected-card').removeClass('correct-card');
-    $('#spotlight-card-caption').html(selectedCard.attr('alt'));
+    let altText = selectedCard.attr('alt');
+    if(altText)
+        $('#spotlight-card-caption').html(altText);
+    else
+        $('#spotlight-card-caption').html('');
     $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
     $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }
@@ -298,7 +302,7 @@ function preventTooHighSpotlight(){
         let gameAreaWidth = $('#game-play-area').width();
         let windowHeight = $(window).height();
         let maxHeight = windowHeight - $('.imaginarium-menu').height() - $('#player-cards').height() -$('.imaginarium-actions').height();
-        $('#spotlight-view-wrapper').css('maxWidth', (maxHeight * 0.64) + 'px');
+        $('#spotlight-view-wrapper').css('maxWidth', (maxHeight * 0.72) + 'px');
     }, 0);
 }
 

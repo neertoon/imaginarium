@@ -255,7 +255,7 @@ body {
 }
 
 .game-card {
-  flex: 0 1 15%; /* explanation below */
+  flex: 0 1 15%; 
   margin: 1px;
 }
 
