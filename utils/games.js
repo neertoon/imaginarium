@@ -367,7 +367,7 @@ var GamesData = {
 
         return elements;
     },
-    reconnect(user, io) {
+    async reconnect(user, io) {
         const room = user.room;
         const game = games.find(game => game.room === room);
         
@@ -380,7 +380,8 @@ var GamesData = {
             io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
         } else if (game.phase == this.phaseScore) {
             io.to(user.socketId).emit('phase', 'scoring');
-            io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+            await io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
+            io.to(user.socketId).emit('summary', JSON.stringify(game.lastSummaryObject));
         } else if (game.phase <= this.phaseSettingReady) {
             if (user.isReady) {
                 io.to(user.socketId).emit('phase', 'readyOn');
