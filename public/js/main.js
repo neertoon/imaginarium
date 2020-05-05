@@ -63,8 +63,16 @@ socket.on('summary', summaryJson => {
     else if(summaryObject.noneVotedOnStoryteller)
         alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
     else{
-        
+        let cards = $($('#player-cards').children());
+        for(const cardOwner of summaryObject.cardOwners){
+            let card = $(cards[cardOwner.cardIndex]);
+            let curr = card.attr('alt');
+            card.attr('alt', cardOwner.name);
 
+            if(card.hasClass('selected'))//nie podoba mi sie ze tu to musi być (żeby od razu sie wyswitlał podpis a nie dopiero po przelaczeniu jakiejkowliek karty)
+                setSpotlightCards(card);
+        }
+        
         summaryAlert(summaryObject);
     }
 });
@@ -176,6 +184,7 @@ function setSpotlightCards(selectedCard){
         $('#spotlight-selected-card').addClass('correct-card');
     else
         $('#spotlight-selected-card').removeClass('correct-card');
+    $('#spotlight-card-caption').html(selectedCard.attr('alt'));
     $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
     $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }
