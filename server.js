@@ -47,7 +47,7 @@ io.on('connection', socket => {
             user.socketId = socket.id;
             user.isOnline = true;
             socket.join(user.room);
-            GamesData.reconnect(user, io);
+            await GamesData.reconnect(user, io);
             sendUsers(user, io);
             return;
         }

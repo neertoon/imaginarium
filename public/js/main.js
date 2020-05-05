@@ -63,15 +63,17 @@ socket.on('summary', summaryJson => {
     else if(summaryObject.noneVotedOnStoryteller)
         alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
     else{
-        let correctPlayers = Object.keys(Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v == 'votedOnStoryteller')));
-        let resultString = trnslt('Correct votes: ') + correctPlayers.join(', ');
-        // let incorrectPlayers = Object.fromEntries(Object.entries(summaryObject.votes).filter(([k,v]) => v != 'votedOnStoryteller'));
-        // for(let i = 0; i < incorrectPlayers.length; i++){
-        //     resultString += '\r\n';
-        //     resultString += incorrectPlayers[i].key() + trnslt(' voted for ');
-        //     let votedName = incorrectPlayersNames[summaryObject.cardOwners];
-        // }
-        alert(resultString);
+        let cards = $($('#player-cards').children());
+        for(const cardOwner of summaryObject.cardOwners){
+            let card = $(cards[cardOwner.cardIndex]);
+            let curr = card.attr('alt');
+            card.attr('alt', cardOwner.name);
+
+            if(card.hasClass('selected'))//nie podoba mi sie ze tu to musi być (żeby od razu sie wyswitlał podpis a nie dopiero po przelaczeniu jakiejkowliek karty)
+                setSpotlightCards(card);
+        }
+        
+        summaryAlert(summaryObject);
     }
 });
 
@@ -135,6 +137,23 @@ chatForm.addEventListener('submit', (e) => {
     e.target.elements.msg.focus();
 });
 
+function summaryAlert(summaryObject) {
+    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
+    let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
+    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
+    incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
+    let previousVoteTarget = null;
+    for (const incorrectPlayer of incorrectPlayers) {
+        if (previousVoteTarget != incorrectPlayer.voteName) {
+            resultString += '\r\n\r\n';
+            resultString += incorrectPlayer.voteName + trnslt(' got vote from: ');
+        }
+        resultString += incorrectPlayer.name + ', ';
+        previousVoteTarget = incorrectPlayer.voteName;
+    }
+    alert(resultString);
+}
+
 function outputMessage(message) {
     const div = document.createElement('div');
     div.classList.add('message');
@@ -165,6 +184,11 @@ function setSpotlightCards(selectedCard){
         $('#spotlight-selected-card').addClass('correct-card');
     else
         $('#spotlight-selected-card').removeClass('correct-card');
+    let altText = selectedCard.attr('alt');
+    if(altText)
+        $('#spotlight-card-caption').html(altText);
+    else
+        $('#spotlight-card-caption').html('');
     $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
     $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }
@@ -278,7 +302,7 @@ function preventTooHighSpotlight(){
         let gameAreaWidth = $('#game-play-area').width();
         let windowHeight = $(window).height();
         let maxHeight = windowHeight - $('.imaginarium-menu').height() - $('#player-cards').height() -$('.imaginarium-actions').height();
-        $('#spotlight-view-wrapper').css('maxWidth', (maxHeight * 0.64) + 'px');
+        $('#spotlight-view-wrapper').css('maxWidth', (maxHeight * 0.72) + 'px');
     }, 0);
 }
 
