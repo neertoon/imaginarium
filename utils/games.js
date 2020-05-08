@@ -249,6 +249,13 @@ var GamesData = {
                     playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
                 }
             }
+            
+            var iter = 0;
+            for (const player of summaryObject.cardOwners) {
+                player.points = game.players[iter].points;
+                iter++;
+            }
+            
             io.to(room).emit('phase', 'scoring');
 
             game.phase = this.phaseScore;
