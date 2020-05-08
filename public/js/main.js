@@ -180,6 +180,22 @@ function outputRoomName(room) {
 }
 
 function outputUsers(users) {
+    console.log('users');
+    console.log(users);
+
+    users = users.sort(function(a, b) {
+        // a should come before b in the sorted order
+        if(a.points < b.points){
+            return -1;
+            // a should come after b in the sorted order
+        }else if(a.points > b.points){
+            return 1;
+            // a and b are the same
+        }else{
+            return 0;
+        }
+    });
+    
     userTable.html(`
         ${users.map(user => `<tr>
             <td ${user.isHost ? 'style="color: red;"' : ''}>${user.isStoryteller ? 'N:' : ''}${user.username}</td>
