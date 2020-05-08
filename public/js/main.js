@@ -55,6 +55,17 @@ socket.on('gameWarning', message => {
 
 socket.on('summary', summaryJson => {
     let summaryObject = JSON.parse(summaryJson);
+    
+    var winners = summaryObject.cardOwners.filter(player => player.points > 29);
+    
+    if (winners.length > 0) {
+        alert('Winners: '+winners.map(function(elem){
+            return elem.name;
+        }).join(", "));
+
+        Game.leave();
+    } 
+    
     let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
     storyTellerCard.addClass('correct-card');
 
