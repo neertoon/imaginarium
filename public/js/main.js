@@ -59,7 +59,7 @@ socket.on('summary', summaryJson => {
     var winners = summaryObject.cardOwners.filter(player => player.points > 29);
     
     if (winners.length > 0) {
-        alert('Winners: '+winners.cardOwners.map(function(elem){
+        alert('Winners: '+winners.map(function(elem){
             return elem.name;
         }).join(", "));
 
