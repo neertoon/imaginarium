@@ -118,7 +118,7 @@ var GamesData = {
             await this.shuffleCardsForVoting(game);
             
             io.to(room).emit('phase', 'voting');
-            
+             
             game.phase = this.phaseVoting;
 
             for (const playerIndex of game.players){
