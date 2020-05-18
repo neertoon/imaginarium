@@ -96,6 +96,8 @@ socket.on('phase', message => {
         // $('#btnSetReady').hide();
         $('#btnChooseCard').show();
         //$('#game-area-info').html('Selecting cards');
+        $('#spotlight-card-caption').hide();
+        $('#spotlight-card-voters').hide();
     } else if (message == 'readyOn') {
         $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', '#5cb85c');
@@ -116,6 +118,9 @@ socket.on('phase', message => {
         $('#game-area-info').html(trnslt('Summary'));
         // $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
+        
+        $('#spotlight-card-caption').show();
+        $('#spotlight-card-voters').show();
     } else if (message == 'narrator') {
         $('#btnVoteForCard').hide();
         $('#game-area-info').html(trnslt('Tell your story to others and pick a card'));
