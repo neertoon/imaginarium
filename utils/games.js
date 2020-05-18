@@ -207,7 +207,7 @@ var GamesData = {
                 votes:[]
             };
             game.players.forEach(player=> {
-                summaryObject.cardOwners.push({name:player.username, cardIndex:player.pickedCardIndex});
+                summaryObject.cardOwners.push({name:player.username, cardIndex:player.pickedCardIndex, cardVoted: player.votedCardIndex});
                 if(player.isStoryteller){
                     summaryObject.storyTellerCardIndex = player.pickedCardIndex;
                     summaryObject.storyTellerName = player.username;
