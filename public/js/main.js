@@ -58,33 +58,35 @@ socket.on('summary', summaryJson => {
     
     var winners = summaryObject.cardOwners.filter(player => player.points > 29);
     
+    let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
+    storyTellerCard.addClass('correct-card');
+
+    let cards = $($('#player-cards').children());
+    let selectedCard = null;
+    for(const cardOwner of summaryObject.cardOwners){
+        let card = $(cards[cardOwner.cardIndex]);
+        let curr = card.attr('alt');
+        card.attr('alt', cardOwner.name+`<i>${cardOwner.scored}</i>`);
+        
+        let votedCard = $(cards[cardOwner.cardVoted]);
+        var lastVoters = votedCard.data('voters');
+        lastVoters = lastVoters ? lastVoters : '';
+        lastVoters += `<span>${cardOwner.name}</span><br>`;
+        votedCard.data('voters', lastVoters);
+
+        if(card.hasClass('selected')) {
+            selectedCard = card;    
+        }
+    }
+
+    setSpotlightCards(selectedCard);
+
     if (winners.length > 0) {
         alert('Winners: '+winners.map(function(elem){
             return elem.name;
         }).join(", "));
 
         Game.leave();
-    } 
-    
-    let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
-    storyTellerCard.addClass('correct-card');
-
-    if(summaryObject.allVotedOnStoryteller)
-        alert(trnslt('FAIL! Everyone voted on storyteller card! +2 points for everyone except him!'));
-    else if(summaryObject.noneVotedOnStoryteller)
-        alert(trnslt('FAIL! Nobody voted on storyteller card! +2 points for everyone except him!'));
-    else{
-        let cards = $($('#player-cards').children());
-        for(const cardOwner of summaryObject.cardOwners){
-            let card = $(cards[cardOwner.cardIndex]);
-            let curr = card.attr('alt');
-            card.attr('alt', cardOwner.name);
-
-            if(card.hasClass('selected'))//nie podoba mi sie ze tu to musi być (żeby od razu sie wyswitlał podpis a nie dopiero po przelaczeniu jakiejkowliek karty)
-                setSpotlightCards(card);
-        }
-        
-        summaryAlert(summaryObject);
     }
 });
 
@@ -94,6 +96,8 @@ socket.on('phase', message => {
         // $('#btnSetReady').hide();
         $('#btnChooseCard').show();
         //$('#game-area-info').html('Selecting cards');
+        $('#spotlight-card-caption').hide();
+        $('#spotlight-card-voters').hide();
     } else if (message == 'readyOn') {
         $('.game-item-showhide').hide();
         $('#btnSetReady').css('background-color', '#5cb85c');
@@ -114,6 +118,9 @@ socket.on('phase', message => {
         $('#game-area-info').html(trnslt('Summary'));
         // $('#btnVoteForCard').hide();
         $('#btnSeenScoring').show();
+        
+        $('#spotlight-card-caption').show();
+        $('#spotlight-card-voters').show();
     } else if (message == 'narrator') {
         $('#btnVoteForCard').hide();
         $('#game-area-info').html(trnslt('Tell your story to others and pick a card'));
@@ -123,7 +130,6 @@ socket.on('phase', message => {
 });
 
 socket.on('gameCardsPack', cardsPack => {
-    console.log(cardsPack);
     $('#player-cards').empty();
     var i=0;
     cardsPack.forEach((card)=>{
@@ -180,9 +186,6 @@ function outputRoomName(room) {
 }
 
 function outputUsers(users) {
-    console.log('users');
-    console.log(users);
-
     users = users.sort(function(a, b) {
         // a should come before b in the sorted order
         if(a.points < b.points){
@@ -212,10 +215,12 @@ function setSpotlightCards(selectedCard){
     else
         $('#spotlight-selected-card').removeClass('correct-card');
     let altText = selectedCard.attr('alt');
-    if(altText)
-        $('#spotlight-card-caption').html(altText);
-    else
-        $('#spotlight-card-caption').html('');
+    altText = altText ? altText : '';
+    let voters = selectedCard.data('voters');
+    voters = voters ? voters : '';
+    
+    $('#spotlight-card-caption').html(altText);
+    $('#spotlight-card-voters').html(voters);
     $('#spotlight-left-card').attr('src', selectedCard.prev().length > 0 ? selectedCard.prev().attr('src') : selectedCard.siblings().last().attr('src'));
     $('#spotlight-right-card').attr('src', selectedCard.next().length > 0 ? selectedCard.next().attr('src') : selectedCard.siblings().first().attr('src'));
 }

@@ -322,6 +322,50 @@ body {
     
 }
 
+#spotlight-card-caption {
+    position: absolute;
+    left: 50%;
+    top: 70px;
+    z-index: 100;
+    background-color: #462307;
+    padding: 2px 10px 3px 10px;
+    border-radius: 20px;
+    border: 2px solid white;
+    transform: translate(-50%, 0);
+    font-weight: bold;
+    color: #ffd900;
+    font-size: 20px;
+}
+
+#spotlight-card-caption i {
+    text-decoration: none;
+    font-style: normal;
+    padding: 4px 10px;
+    border: 1px solid white;
+    border-radius: 20px;
+    font-size: 18px;
+    margin: 0;
+    margin-left: 4px;
+    color: lightgreen;
+}
+
+#spotlight-card-voters {
+    position: absolute;
+    top: 35%;
+    left: 65%;
+    text-align: right;
+    z-index: 100;
+}
+
+#spotlight-card-voters span {
+    border-radius: 15px;
+    padding: 2px 10px;
+    background-color: #ffd900;
+    border: 2px solid black;
+    color: #462307;
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
     #game-users-area {
         display: block !important;
