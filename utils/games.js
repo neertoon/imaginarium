@@ -207,7 +207,7 @@ var GamesData = {
                 votes:[]
             };
             game.players.forEach(player=> {
-                summaryObject.cardOwners.push({name:player.username, cardIndex:player.pickedCardIndex, cardVoted: player.votedCardIndex});
+                summaryObject.cardOwners.push({id: player.id, name:player.username, cardIndex:player.pickedCardIndex, cardVoted: player.votedCardIndex, scored: 0});
                 if(player.isStoryteller){
                     summaryObject.storyTellerCardIndex = player.pickedCardIndex;
                     summaryObject.storyTellerName = player.username;
@@ -224,6 +224,8 @@ var GamesData = {
                         continue;
                     }
                     player.points += 2;
+                    let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === player.id);
+                    summaryPlayer.scored = 2;
                 }
                 if(playersThatFoundStorytellerCard.length === 1)
                     summaryObject.noneVotedOnStoryteller = true;
@@ -232,6 +234,8 @@ var GamesData = {
             } else {
                 for (const player of playersThatFoundStorytellerCard){
                     player.points += 3;
+                    let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === player.id);
+                    summaryPlayer.scored = 3;
                     if(!player.isStoryteller)
                         summaryObject.votes.push({name:player.username, voteIndex: 'votedOnStoryteller', voteName: storyTeller.username});
                 }
@@ -247,12 +251,15 @@ var GamesData = {
                     }
                     playerToGetAnotherPoints.points += 1;
                     playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
+                    let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === playerToGetAnotherPoints.id);
+                    summaryPlayer.scored += 1;
                 }
             }
             
             var iter = 0;
             for (const player of summaryObject.cardOwners) {
                 player.points = game.players[iter].points;
+                delete player.id;
                 iter++;
             }
             

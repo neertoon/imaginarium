@@ -66,7 +66,7 @@ socket.on('summary', summaryJson => {
     for(const cardOwner of summaryObject.cardOwners){
         let card = $(cards[cardOwner.cardIndex]);
         let curr = card.attr('alt');
-        card.attr('alt', cardOwner.name);
+        card.attr('alt', cardOwner.name+`<i>${cardOwner.scored}</i>`);
         
         let votedCard = $(cards[cardOwner.cardVoted]);
         var lastVoters = votedCard.data('voters');
