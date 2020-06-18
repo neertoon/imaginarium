@@ -162,6 +162,7 @@ var GamesData = {
         return publicUsers;
     },
     
+    
     userLeave: function(room, id) {
         const game = games.find(game => game.room === room);
         
