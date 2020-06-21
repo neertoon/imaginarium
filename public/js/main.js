@@ -18,10 +18,10 @@ socket.emit('joinRoom', {
     password
 });
 
-socket.on('roomUsers', ({ room, users }) => {
+socket.on('roomUsers', ({ room, users, isHost }) => {
     outputRoomName(room);
     
-    outputUsers(users);
+    outputUsers(users, isHost);
 });
 
 socket.on('message', message => {
@@ -185,7 +185,7 @@ function outputRoomName(room) {
     roomName.innerText = room;
 }
 
-function outputUsers(users) {
+function outputUsers(users, isHost) {
     for (let index in users) {
         let user = users[index];
         user['originalIndex'] = index;
@@ -206,7 +206,7 @@ function outputUsers(users) {
     
     userTable.html(`
         ${users.map( (user) => `<tr>
-            <td ${user.isHost ? 'style="color: red;"' : ''}><button class="btn-del" onclick="Game.deleteUser('${user.originalIndex}')"><i class="fas fa-trash-alt"></i></button> ${user.isStoryteller ? 'N:' : ''}${user.username}</td>
+            <td ${user.isHost ? 'style="color: red;"' : ''}><button class="btn-del" ${isHost ? '' : 'style="display: none;"'} onclick="Game.deleteUser('${user.originalIndex}')"><i class="fas fa-trash-alt"></i></button> ${user.isStoryteller ? 'N:' : ''}${user.username}</td>
             <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}${user.isOnline ? '' : '<i class="fas fa-wifi"></i>'}</td>
             <td>${user.points}</td>
         </tr>`).join('')}

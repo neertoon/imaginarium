@@ -161,13 +161,15 @@ io.on('connection', socket => {
     
     socket.on('kickOut', async (userId) => {
         const user = getCurrentUser(actualUserId);
-        let users = getRoomUsers(user.room);
-        let userToDelete = users[userId];
-        GamesData.userLeave(user.room, userToDelete.id);
-        
-        setTimeout(function() {
-            sendUsers(user, io);    
-        }, 300);
+        if (user.isHost) {
+            let users = getRoomUsers(user.room);
+            let userToDelete = users[userId];
+            GamesData.userLeave(user.room, userToDelete.id);
+
+            setTimeout(function() {
+                sendUsers(user, io);
+            }, 300);   
+        }
     });
 });
 
@@ -188,11 +190,15 @@ server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 function sendUsers(user, io) {
     var usersy = GamesData.getUsersForClient(user.room);
+    var usersRoom = getRoomUsers(user.room);
     
-    io.to(user.room).emit('roomUsers', {
-        room: user.room,
-        users:usersy 
-    });
+    for (let roomUser of usersRoom) {
+        io.to(roomUser.id).emit('roomUsers', {
+            room: user.room,
+            users:usersy,
+            isHost: roomUser.isHost
+        });   
+    }
 }
 
 //Taki test
