@@ -98,6 +98,18 @@ io.on('connection', socket => {
         } 
     });
     
+    //Fired upon a successful reconnection.
+    socket.on('reconnect', () => {
+        const user = getCurrentUser(actualUserId);
+        
+        if (user) {
+            user.isOnline = true;
+            sendUsers(user, io);
+        } 
+    });
+
+
+    
     // Listen for chatMessages
     socket.on('chatMessage', (msg) => {
         const user = getCurrentUser(actualUserId);
