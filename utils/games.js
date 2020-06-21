@@ -172,7 +172,7 @@ var GamesData = {
             
             game.players.splice(index, 1)[0];
             
-            if (deletedUser.isHost) {
+            if (deletedUser.isHost && game.players.length > 0) {
                 game.players[0].isHost = true;    
             }
         }
