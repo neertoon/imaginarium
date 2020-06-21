@@ -165,6 +165,8 @@ io.on('connection', socket => {
             let users = getRoomUsers(user.room);
             let userToDelete = users[userId];
             GamesData.userLeave(user.room, userToDelete.id);
+            
+            io.to(userToDelete.id).emit('gameError', formatMessage(serverName, 'You have been kicked out'));
 
             setTimeout(function() {
                 sendUsers(user, io);
