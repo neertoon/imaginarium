@@ -158,6 +158,17 @@ io.on('connection', socket => {
 
         sendUsers(user, io);
     });
+    
+    socket.on('kickOut', async (userId) => {
+        const user = getCurrentUser(actualUserId);
+        let users = getRoomUsers(user.room);
+        let userToDelete = users[userId];
+        GamesData.userLeave(user.room, userToDelete.id);
+        
+        setTimeout(function() {
+            sendUsers(user, io);    
+        }, 300);
+    });
 });
 
 app.post('/insertCardPack', async (req, res) => {

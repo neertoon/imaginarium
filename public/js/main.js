@@ -186,6 +186,11 @@ function outputRoomName(room) {
 }
 
 function outputUsers(users) {
+    for (let index in users) {
+        let user = users[index];
+        user['originalIndex'] = index;
+    }
+    
     users = users.sort(function(a, b) {
         // a should come before b in the sorted order
         if(a.points < b.points){
@@ -200,8 +205,8 @@ function outputUsers(users) {
     });
     
     userTable.html(`
-        ${users.map(user => `<tr>
-            <td ${user.isHost ? 'style="color: red;"' : ''}>${user.isStoryteller ? 'N:' : ''}${user.username}</td>
+        ${users.map( (user) => `<tr>
+            <td ${user.isHost ? 'style="color: red;"' : ''}><button class="btn-del" onclick="Game.deleteUser('${user.originalIndex}')"><i class="fas fa-trash-alt"></i></button> ${user.isStoryteller ? 'N:' : ''}${user.username}</td>
             <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}${user.isOnline ? '' : '<i class="fas fa-wifi"></i>'}</td>
             <td>${user.points}</td>
         </tr>`).join('')}
@@ -261,6 +266,9 @@ const Game = {
         setCookie('iduserb', '', -1);
         socket.emit('leaveRoom', 'ok');
         window.location = '/';
+    },
+    deleteUser: function(idUser) {
+        socket.emit('kickOut', idUser);
     }
 };
 
