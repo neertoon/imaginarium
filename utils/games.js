@@ -168,7 +168,13 @@ var GamesData = {
         const index = game.players.findIndex(user => user.id === id);
 
         if (index !== -1) {
+            let deletedUser = game.players[index];
+            
             game.players.splice(index, 1)[0];
+            
+            if (deletedUser.isHost) {
+                game.players[0].isHost = true;    
+            }
         }
 
         if (game.players.length === 0) {
