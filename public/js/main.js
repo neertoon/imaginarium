@@ -194,10 +194,10 @@ function outputUsers(users, isHost) {
     users = users.sort(function(a, b) {
         // a should come before b in the sorted order
         if(a.points < b.points){
-            return -1;
+            return 1;
             // a should come after b in the sorted order
         }else if(a.points > b.points){
-            return 1;
+            return -1;
             // a and b are the same
         }else{
             return 0;
