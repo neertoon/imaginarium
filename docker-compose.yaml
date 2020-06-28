@@ -3,6 +3,8 @@ services:
   nodeserver:
     build: .
     volumes:
-      - .:/src/
+      - .:/usr/src/service/
+    working_dir: /usr/src/service/
+    command: npm run dev
     ports:
       - "3000:3000"
