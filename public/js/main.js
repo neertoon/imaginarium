@@ -291,7 +291,7 @@ function setUserChecking(){
 
     setTimeout(function(){ 
         if(currentId == serverResponseCheckId){
-            alert(trnslt("Server didn't receive you action. Reloading!")); 
+            alert(trnslt("Server didn't receive your action. Reloading!")); 
             location.reload();
         }
         else
