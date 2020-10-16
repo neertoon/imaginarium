@@ -3,6 +3,7 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
+let serverResponseCheckId = null;
 
 // Get user and room from URL
 const { username, room, password } = Qs.parse(location.search, {
@@ -19,12 +20,14 @@ socket.emit('joinRoom', {
 });
 
 socket.on('roomUsers', ({ room, users, isHost }) => {
+    serverResponseCheckId = null;
     outputRoomName(room);
     
     outputUsers(users, isHost);
 });
 
 socket.on('message', message => {
+    serverResponseCheckId = null;
     outputMessage(message);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -35,6 +38,7 @@ socket.on('message', message => {
 });
 
 socket.on('gameError', message => {
+    serverResponseCheckId = null;
     console.log(message.text);
     setCookie('iduserb', '', -1);
     alert(trnslt(message.text));
@@ -42,6 +46,7 @@ socket.on('gameError', message => {
 });
 
 socket.on('gameWarning', message => {
+    serverResponseCheckId = null;
     alert(trnslt(message.text));
     
     if (message.hasOwnProperty('phase')) {
@@ -54,6 +59,7 @@ socket.on('gameWarning', message => {
 });
 
 socket.on('summary', summaryJson => {
+    serverResponseCheckId = null;
     let summaryObject = JSON.parse(summaryJson);
     
     var winners = summaryObject.cardOwners.filter(player => player.points > 29);
@@ -91,6 +97,7 @@ socket.on('summary', summaryJson => {
 });
 
 socket.on('phase', message => {
+    serverResponseCheckId = null;
     if (message == 'selectCard') {
         $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
@@ -130,6 +137,7 @@ socket.on('phase', message => {
 });
 
 socket.on('gameCardsPack', cardsPack => {
+    serverResponseCheckId = null;
     $('#player-cards').empty();
     var i=0;
     cardsPack.forEach((card)=>{
@@ -244,6 +252,7 @@ const Game = {
     },
     sendPickedCard : function(event, cardNumber) {
         event.preventDefault();
+        setUserChecking();
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
         var element = $(event.target);
@@ -251,6 +260,7 @@ const Game = {
     },
     voteForCard : function(event, cardNumber) {
         event.preventDefault();
+        setUserChecking();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
         var element = $(event.target);
@@ -258,6 +268,7 @@ const Game = {
     },
     nextRound : function(event) {
         event.preventDefault();
+        setUserChecking();
         socket.emit('gameNextRound', 'NEXT');
         var element = $(event.target);
         element.hide();
@@ -273,6 +284,26 @@ const Game = {
         socket.emit('kickOut', idUser);
     }
 };
+
+function setUserChecking(){
+    let currentId = getRandomInt(1,999999)
+    serverResponseCheckId = currentId;
+
+    setTimeout(function(){ 
+        if(currentId == serverResponseCheckId){
+            alert(trnslt("Server didn't receive you action. Reloading!")); 
+            location.reload();
+        }
+        else
+            console.log('jest gitówa');
+    }, 5000);
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
 function toggleUsers() {
     let userArea = $('#game-users-area');
