@@ -252,7 +252,7 @@ const Game = {
     },
     sendPickedCard : function(event, cardNumber) {
         event.preventDefault();
-        setUserChecking();
+        setServerResponseCheckId();
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
         var element = $(event.target);
@@ -260,7 +260,7 @@ const Game = {
     },
     voteForCard : function(event, cardNumber) {
         event.preventDefault();
-        setUserChecking();
+        setServerResponseCheckId();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
         var element = $(event.target);
@@ -268,7 +268,7 @@ const Game = {
     },
     nextRound : function(event) {
         event.preventDefault();
-        setUserChecking();
+        setServerResponseCheckId();
         socket.emit('gameNextRound', 'NEXT');
         var element = $(event.target);
         element.hide();
@@ -285,7 +285,7 @@ const Game = {
     }
 };
 
-function setUserChecking(){
+function setServerResponseCheckId(){
     let currentId = getRandomInt(1,999999)
     serverResponseCheckId = currentId;
 
