@@ -162,14 +162,28 @@ var GamesData = {
         return publicUsers;
     },
     
-    
-    userLeave: function(room, id) {
+    userLeave: async function(room, id, io) {
         const game = games.find(game => game.room === room);
         
         const index = game.players.findIndex(user => user.id === id);
 
         if (index !== -1) {
+            let deletedUser = game.players[index];
+            
             game.players.splice(index, 1)[0];
+            
+            if (deletedUser.isHost && game.players.length > 0) {
+                game.players[0].isHost = true;
+            }
+
+            if (deletedUser.isStoryteller && game.players.length > 0) {
+                let newIndex = index === 0 ? game.players.length : (index - 1);
+                game.players[newIndex].isStoryteller = true;
+                game.phase = this.phaseScore;
+                game.players.map(userInGame => userInGame.selectedCard = true);
+                game.players[newIndex].selectedCard = false;
+                await GamesData.nextRound(game.players[newIndex], io);
+            }
         }
 
         if (game.players.length === 0) {

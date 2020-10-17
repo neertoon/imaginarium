@@ -366,6 +366,12 @@ body {
     font-weight: bold;
 }
 
+.btn-del {
+    border: 0;
+    background-color: unset;
+    color: red;
+}
+
 @media (max-width: 768px) {
     #game-users-area {
         display: block !important;

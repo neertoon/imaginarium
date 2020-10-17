@@ -76,7 +76,7 @@ io.on('connection', socket => {
         const user = userLeave(actualUserId);
 
         if (user) {
-            GamesData.userLeave(user.room, user.id);
+            GamesData.userLeave(user.room, user.id, io);
 
             sendUsers(user, io);
 
@@ -97,6 +97,18 @@ io.on('connection', socket => {
             sendUsers(user, io);
         } 
     });
+    
+    //Fired upon a successful reconnection.
+    socket.on('reconnect', () => {
+        const user = getCurrentUser(actualUserId);
+        
+        if (user) {
+            user.isOnline = true;
+            sendUsers(user, io);
+        } 
+    });
+
+
     
     // Listen for chatMessages
     socket.on('chatMessage', (msg) => {
@@ -146,6 +158,22 @@ io.on('connection', socket => {
 
         sendUsers(user, io);
     });
+    
+    socket.on('kickOut', async (userId) => {
+        const user = getCurrentUser(actualUserId);
+        if (user.isHost) {
+            let users = getRoomUsers(user.room);
+            let userToDelete = users[userId];
+            userLeave(userToDelete.id);
+            GamesData.userLeave(user.room, userToDelete.id, io);
+            
+            io.to(userToDelete.id).emit('gameError', formatMessage(serverName, 'You have been kicked out'));
+
+            setTimeout(function() {
+                sendUsers(user, io);
+            }, 300);   
+        }
+    });
 });
 
 app.post('/insertCardPack', async (req, res) => {
@@ -165,11 +193,15 @@ server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 function sendUsers(user, io) {
     var usersy = GamesData.getUsersForClient(user.room);
+    var usersRoom = getRoomUsers(user.room);
     
-    io.to(user.room).emit('roomUsers', {
-        room: user.room,
-        users:usersy 
-    });
+    for (let roomUser of usersRoom) {
+        io.to(roomUser.id).emit('roomUsers', {
+            room: user.room,
+            users:usersy,
+            isHost: roomUser.isHost
+        });   
+    }
 }
 
 //Taki test

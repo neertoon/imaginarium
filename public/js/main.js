@@ -3,6 +3,7 @@ const chatMessages = document.querySelector('.chat-messages');
 const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
+let serverResponseCheckId = null;
 
 // Get user and room from URL
 const { username, room, password } = Qs.parse(location.search, {
@@ -18,13 +19,15 @@ socket.emit('joinRoom', {
     password
 });
 
-socket.on('roomUsers', ({ room, users }) => {
+socket.on('roomUsers', ({ room, users, isHost }) => {
+    serverResponseCheckId = null;
     outputRoomName(room);
     
-    outputUsers(users);
+    outputUsers(users, isHost);
 });
 
 socket.on('message', message => {
+    serverResponseCheckId = null;
     outputMessage(message);
 
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -35,6 +38,7 @@ socket.on('message', message => {
 });
 
 socket.on('gameError', message => {
+    serverResponseCheckId = null;
     console.log(message.text);
     setCookie('iduserb', '', -1);
     alert(trnslt(message.text));
@@ -42,6 +46,7 @@ socket.on('gameError', message => {
 });
 
 socket.on('gameWarning', message => {
+    serverResponseCheckId = null;
     alert(trnslt(message.text));
     
     if (message.hasOwnProperty('phase')) {
@@ -54,6 +59,7 @@ socket.on('gameWarning', message => {
 });
 
 socket.on('summary', summaryJson => {
+    serverResponseCheckId = null;
     let summaryObject = JSON.parse(summaryJson);
     
     var winners = summaryObject.cardOwners.filter(player => player.points > 29);
@@ -91,6 +97,7 @@ socket.on('summary', summaryJson => {
 });
 
 socket.on('phase', message => {
+    serverResponseCheckId = null;
     if (message == 'selectCard') {
         $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
@@ -130,6 +137,7 @@ socket.on('phase', message => {
 });
 
 socket.on('gameCardsPack', cardsPack => {
+    serverResponseCheckId = null;
     $('#player-cards').empty();
     var i=0;
     cardsPack.forEach((card)=>{
@@ -185,14 +193,19 @@ function outputRoomName(room) {
     roomName.innerText = room;
 }
 
-function outputUsers(users) {
+function outputUsers(users, isHost) {
+    for (let index in users) {
+        let user = users[index];
+        user['originalIndex'] = index;
+    }
+    
     users = users.sort(function(a, b) {
         // a should come before b in the sorted order
         if(a.points < b.points){
-            return -1;
+            return 1;
             // a should come after b in the sorted order
         }else if(a.points > b.points){
-            return 1;
+            return -1;
             // a and b are the same
         }else{
             return 0;
@@ -200,8 +213,8 @@ function outputUsers(users) {
     });
     
     userTable.html(`
-        ${users.map(user => `<tr>
-            <td ${user.isHost ? 'style="color: red;"' : ''}>${user.isStoryteller ? 'N:' : ''}${user.username}</td>
+        ${users.map( (user) => `<tr>
+            <td ${user.isHost ? 'style="color: red;"' : ''}><button class="btn-del" ${isHost ? '' : 'style="display: none;"'} onclick="Game.deleteUser('${user.originalIndex}')"><i class="fas fa-trash-alt"></i></button> ${user.isStoryteller ? 'N:' : ''}${user.username}</td>
             <td>${user.madeMove ? '<i class="fas fa-check-circle"></i>' : ''}${user.isOnline ? '' : '<i class="fas fa-wifi"></i>'}</td>
             <td>${user.points}</td>
         </tr>`).join('')}
@@ -239,6 +252,7 @@ const Game = {
     },
     sendPickedCard : function(event, cardNumber) {
         event.preventDefault();
+        setServerResponseCheckId();
         socket.emit('gamePickCard', cardNumber);
         console.log('You selected card '+cardNumber);
         var element = $(event.target);
@@ -246,6 +260,7 @@ const Game = {
     },
     voteForCard : function(event, cardNumber) {
         event.preventDefault();
+        setServerResponseCheckId();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
         var element = $(event.target);
@@ -253,16 +268,42 @@ const Game = {
     },
     nextRound : function(event) {
         event.preventDefault();
+        setServerResponseCheckId();
         socket.emit('gameNextRound', 'NEXT');
         var element = $(event.target);
         element.hide();
     },
     leave :function() {
-        setCookie('iduserb', '', -1);
-        socket.emit('leaveRoom', 'ok');
-        window.location = '/';
+        if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
+            setCookie('iduserb', '', -1);
+            socket.emit('leaveRoom', 'ok');
+            window.location = '/';
+        }
+    },
+    deleteUser: function(idUser) {
+        socket.emit('kickOut', idUser);
     }
 };
+
+function setServerResponseCheckId(){
+    let currentId = getRandomInt(1,999999)
+    serverResponseCheckId = currentId;
+
+    setTimeout(function(){ 
+        if(currentId == serverResponseCheckId){
+            alert(trnslt("Server didn't receive your action. Reloading!")); 
+            location.reload();
+        }
+        else
+            console.log('jest gitówa');
+    }, 5000);
+}
+
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 
 function toggleUsers() {
     let userArea = $('#game-users-area');
