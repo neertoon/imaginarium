@@ -88,6 +88,7 @@ io.on('connection', socket => {
     
     // Gdy użytkownik się odłącza - uwaga, może go wywalić z gry a będzie chciał powrócić!
     socket.on('disconnect', () => {
+        console.log('MSG - disconnect');
         const user = getCurrentUser(actualUserId);
         
         if (user) {
@@ -100,6 +101,7 @@ io.on('connection', socket => {
     
     //Fired upon a successful reconnection.
     socket.on('reconnect', () => {
+        console.log('MSG - reconnect');
         const user = getCurrentUser(actualUserId);
         
         if (user) {
