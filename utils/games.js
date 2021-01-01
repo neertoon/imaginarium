@@ -177,7 +177,7 @@ var GamesData = {
             }
 
             if (deletedUser.isStoryteller && game.players.length > 0) {
-                let newIndex = index === 0 ? game.players.length : (index - 1);
+                let newIndex = index === 0 ? game.players.length - 1: (index - 1);
                 game.players[newIndex].isStoryteller = true;
                 game.phase = this.phaseScore;
                 game.players.map(userInGame => userInGame.selectedCard = true);
