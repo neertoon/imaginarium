@@ -274,16 +274,20 @@ const Game = {
         element.hide();
     },
     leave :function() {
-        if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
-            setCookie('iduserb', '', -1);
-            socket.emit('leaveRoom', 'ok');
-            window.location = '/';
-        }
+        setCookie('iduserb', '', -1);
+        socket.emit('leaveRoom', 'ok');
+        window.location = '/';
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
     }
 };
+
+function userDoorClick(){
+    if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
+        Game.leave();
+    }
+}
 
 function setServerResponseCheckId(){
     let currentId = getRandomInt(1,999999)
