@@ -88,9 +88,25 @@ socket.on('summary', summaryJson => {
     setSpotlightCards(selectedCard);
 
     if (winners.length > 0) {
-        alert('Winners: '+winners.map(function(elem){
+        let endingAlertString = trnslt('Winner/s: ')+winners.map(function(elem){
             return elem.name;
-        }).join(", "));
+        }).join(", ");
+        endingAlertString += '\r\n\r\n';
+        endingAlertString += trnslt('Last round: ')+ '\r\n' + summaryAlert(summaryObject);        
+        endingAlertString += '\r\n\r\n';
+        summaryObject.endGamePlayersList.sort(function(a, b) {
+            if(a.points < b.points){
+                return 1;
+            }else if(a.points > b.points){
+                return -1;
+            }else{
+                return 0;
+            }
+        });
+        endingAlertString += trnslt('Results: ')+ '\r\n' + summaryObject.endGamePlayersList.map(function(player){
+            return player.username + ': ' + player.points;
+        }).join("\r\n");
+        alert(endingAlertString);
 
         Game.leave();
     }
@@ -165,18 +181,19 @@ chatForm.addEventListener('submit', (e) => {
 function summaryAlert(summaryObject) {
     let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
     let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
+    resultString += '\r\n' + trnslt('Incorrect votes: ');
     let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
     incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
     let previousVoteTarget = null;
     for (const incorrectPlayer of incorrectPlayers) {
         if (previousVoteTarget != incorrectPlayer.voteName) {
-            resultString += '\r\n\r\n';
+            resultString += '\r\n';
             resultString += incorrectPlayer.voteName + trnslt(' got vote from: ');
         }
         resultString += incorrectPlayer.name + ', ';
         previousVoteTarget = incorrectPlayer.voteName;
     }
-    alert(resultString);
+    return resultString;
 }
 
 function outputMessage(message) {

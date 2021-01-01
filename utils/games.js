@@ -219,7 +219,8 @@ var GamesData = {
                 allVotedOnStoryteller: false,
                 noneVotedOnStoryteller: false,
                 cardOwners:[],
-                votes:[]
+                votes:[],
+                endGamePlayersList:[]
             };
             game.players.forEach(player=> {
                 summaryObject.cardOwners.push({id: player.id, name:player.username, cardIndex:player.pickedCardIndex, cardVoted: player.votedCardIndex, scored: 0});
@@ -286,6 +287,9 @@ var GamesData = {
                 playerIndex.selectedCard = false;
             }
             
+            if(game.players.find(user => user.points > 29) != undefined){//może ten if to zbedna optymalizacja? bo w sumie taka tabelka playerow za wielka nie jest?
+                summaryObject.endGamePlayersList = game.players;
+            }
 
             io.to(room).emit('summary', JSON.stringify(summaryObject));
             game.lastSummaryObject = summaryObject;
