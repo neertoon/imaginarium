@@ -198,7 +198,7 @@ function sendUsers(user, io) {
     var usersRoom = getRoomUsers(user.room);
     
     for (let roomUser of usersRoom) {
-        io.to(roomUser.id).emit('roomUsers', {
+        io.to(roomUser.socketId).emit('roomUsers', {
             room: user.room,
             users:usersy,
             isHost: roomUser.isHost
