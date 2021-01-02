@@ -106,9 +106,9 @@ socket.on('summary', summaryJson => {
         endingAlertString += trnslt('Results: ')+ '\r\n' + summaryObject.endGamePlayersList.map(function(player){
             return player.username + ': ' + player.points;
         }).join("\r\n");
+        leaveServerRoom();
         alert(endingAlertString);
-
-        Game.leave();
+        window.location = '/';
     }
 });
 
@@ -291,14 +291,18 @@ const Game = {
         element.hide();
     },
     leave :function() {
-        setCookie('iduserb', '', -1);
-        socket.emit('leaveRoom', 'ok');
+        leaveServerRoom();
         window.location = '/';
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
     }
 };
+
+function leaveServerRoom(){
+    setCookie('iduserb', '', -1);
+    socket.emit('leaveRoom', 'ok');
+}
 
 function userDoorClick(){
     if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
