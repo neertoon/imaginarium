@@ -628,6 +628,19 @@ body {
     touch-action: manipulation;
   }
   
+  #sweet-alert-target .swal2-container {
+    position:inherit;
+}
+
+#sweet-alert-target{
+    width: 100%;
+        height: 100%;            
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: none;
+}
    /* The snackbar - position it at the bottom and in the middle of the screen */
 #snackbar {
     visibility: hidden; /* Hidden by default. Visible on click */

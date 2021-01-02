@@ -41,10 +41,12 @@ socket.on('gameError', async message => {
     serverResponseCheckId = null;
     console.log(message.text);
     setCookie('iduserb', '', -1);
+    $("#sweet-alert-target").css("display","block");
     await Swal.fire({
         html: trnslt(message.text),
         icon: 'error',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        target: document.getElementById('sweet-alert-target')
       });
     window.location = '/';
 });
@@ -188,11 +190,13 @@ async function gameFinish(winners, summaryObject) {
         return player.username + ': ' + player.points;
     }).join("<br/>");
     leaveServerRoom();
+    $("#sweet-alert-target").css("display","block");
     await Swal.fire({
         title: trnslt('Game over'),
         html: endingAlertString,
         icon: 'success',
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
+        target: document.getElementById('sweet-alert-target')
     });
     window.location = '/';
 }
@@ -329,16 +333,19 @@ function userDoorClick(){
         Game.leave();
     }
     else{
-    Swal.fire({
-        html: trnslt("Are you sure? You won't be able to rejoin until game ends!"),
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        showCancelButton: true,
-        cancelButtonText: trnslt('Stay')
-      }).then((result) => {
-        if (result.isConfirmed) {
-            Game.leave();
-        }});
+        $("#sweet-alert-target").css("display","block");
+        Swal.fire({
+            html: trnslt("Are you sure? You won't be able to rejoin until game ends!"),
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            showCancelButton: true,
+            cancelButtonText: trnslt('Stay'),
+            target: document.getElementById('sweet-alert-target')
+        }).then((result) => {
+            $("#sweet-alert-target").css("display","none");
+            if (result.isConfirmed) {
+                Game.leave();
+            }});
     }
 }
 
@@ -348,10 +355,12 @@ function setServerResponseCheckId(){
 
     setTimeout(async function(){ 
         if(currentId == serverResponseCheckId){
+            $("#sweet-alert-target").css("display","block");
             await Swal.fire({
                 text: trnslt("Server didn't receive your action. Reloading!"),
                 icon: 'warning',
-                confirmButtonText: 'OK'
+                confirmButtonText: 'OK',
+                target: document.getElementById('sweet-alert-target')
               });
             location.reload();
         }
