@@ -37,25 +37,18 @@ socket.on('message', message => {
     }
 });
 
-socket.on('gameError', async message => {
+socket.on('gameError', message => {
     serverResponseCheckId = null;
     console.log(message.text);
     setCookie('iduserb', '', -1);
-    await Swal.fire({
-        html: trnslt(message.text),
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
+    alert(trnslt(message.text));
     window.location = '/';
 });
 
 socket.on('gameWarning', message => {
     serverResponseCheckId = null;
-    Swal.fire({
-        html: trnslt(message.text),
-        icon: 'warning',
-        confirmButtonText: 'OK'
-      });
+    alert(trnslt(message.text));
+    
     if (message.hasOwnProperty('phase')) {
         if (message.phase === 'voting') {
             $('#btnVoteForCard').show();
@@ -65,10 +58,11 @@ socket.on('gameWarning', message => {
     }
 });
 
-socket.on('summary', async summaryJson => {
+socket.on('summary', summaryJson => {
     serverResponseCheckId = null;
     let summaryObject = JSON.parse(summaryJson);
     
+    var winners = summaryObject.cardOwners.filter(player => player.points > 29);
     
     let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
     storyTellerCard.addClass('correct-card');
@@ -92,9 +86,29 @@ socket.on('summary', async summaryJson => {
     }
 
     setSpotlightCards(selectedCard);
-    let winners = summaryObject.cardOwners.filter(player => player.points > 29);
+
     if (winners.length > 0) {
-        await gameFinish(winners, summaryObject);
+        let endingAlertString = trnslt('Winner/s: ')+winners.map(function(elem){
+            return elem.name;
+        }).join(", ");
+        endingAlertString += '\r\n\r\n';
+        endingAlertString += trnslt('Last round: ')+ '\r\n' + summaryAlert(summaryObject);        
+        endingAlertString += '\r\n\r\n';
+        summaryObject.endGamePlayersList.sort(function(a, b) {
+            if(a.points < b.points){
+                return 1;
+            }else if(a.points > b.points){
+                return -1;
+            }else{
+                return 0;
+            }
+        });
+        endingAlertString += trnslt('Results: ')+ '\r\n' + summaryObject.endGamePlayersList.map(function(player){
+            return player.username + ': ' + player.points;
+        }).join("\r\n");
+        leaveServerRoom();
+        alert(endingAlertString);
+        window.location = '/';
     }
 });
 
@@ -164,48 +178,16 @@ chatForm.addEventListener('submit', (e) => {
     e.target.elements.msg.focus();
 });
 
-async function gameFinish(winners, summaryObject) {
-    let endingAlertString = '';
-    if(false){
-        endingAlertString += trnslt('Winner/s: ') + winners.map(function (elem) {
-            return elem.name;
-        }).join(", ");
-    }
-    endingAlertString += '<b>';
-    endingAlertString += trnslt('Last round: ') + '</b><br/>' + summaryAlert(summaryObject);
-    endingAlertString += '<br/><br/><b>';
-    summaryObject.endGamePlayersList.sort(function (a, b) {
-        if (a.points < b.points) {
-            return 1;
-        } else if (a.points > b.points) {
-            return -1;
-        } else {
-            return 0;
-        }
-    });
-    endingAlertString += trnslt('Results: ') + '</b><br/>' + summaryObject.endGamePlayersList.map(function (player) {
-        return player.username + ': ' + player.points;
-    }).join("<br/>");
-    leaveServerRoom();
-    await Swal.fire({
-        title: trnslt('Game over'),
-        html: endingAlertString,
-        icon: 'success',
-        confirmButtonText: 'OK'
-    });
-    window.location = '/';
-}
-
 function summaryAlert(summaryObject) {
     let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
     let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
-    resultString += '<br/>' + trnslt('Incorrect votes: ');
+    resultString += '\r\n' + trnslt('Incorrect votes: ');
     let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
     incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
     let previousVoteTarget = null;
     for (const incorrectPlayer of incorrectPlayers) {
         if (previousVoteTarget != incorrectPlayer.voteName) {
-            resultString += '<br/>';
+            resultString += '\r\n';
             resultString += incorrectPlayer.voteName + trnslt(' got vote from: ');
         }
         resultString += incorrectPlayer.name + ', ';
@@ -323,21 +305,8 @@ function leaveServerRoom(){
 }
 
 function userDoorClick(){
-    let cards = $($('#player-cards').children());
-    if(cards.length == 0){
+    if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
         Game.leave();
-    }
-    else{
-    Swal.fire({
-        html: trnslt("Are you sure? You won't be able to rejoin until game ends!"),
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        showCancelButton: true,
-        cancelButtonText: trnslt('Stay')
-      }).then((result) => {
-        if (result.isConfirmed) {
-            Game.leave();
-        }});
     }
 }
 
@@ -345,13 +314,9 @@ function setServerResponseCheckId(){
     let currentId = getRandomInt(1,999999)
     serverResponseCheckId = currentId;
 
-    setTimeout(async function(){ 
+    setTimeout(function(){ 
         if(currentId == serverResponseCheckId){
-            await Swal.fire({
-                text: trnslt("Server didn't receive your action. Reloading!"),
-                icon: 'warning',
-                confirmButtonText: 'OK'
-              });
+            alert(trnslt("Server didn't receive your action. Reloading!")); 
             location.reload();
         }
         else
