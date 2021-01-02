@@ -41,11 +41,13 @@ const plKeys = {
     "Incorrect votes: " : 'Nietrafione: ',
     " got vote from: " : ' dostał głos od: ',
     "You have been kicked out" : 'Zostałeś wyrzucony z gry',
-    "Are you sure? After the game has started you won't be able to rejoin until it ends!" : "Jesteś pewien? Po rozpoczęciu gry nie będziesz mógł do niej dołączyć dopóki się ona nie skończy",
+    "Are you sure? You won't be able to rejoin until game ends!" : "Jesteś pewien? Nie będziesz mógł dołączyć do gry dopóki się ona nie skończy",
     "Server didn't receive your action. Reloading!": "Serwer nie otrzymał twojej czynności. Odświeżam!",
     'Winner/s: ' : 'Zwycięzca/y: ',
     'Last round: ' : 'Ostatnia runda: ',
     'Results: ' : 'Tabela wyników: ',
+    'Game over' : 'Koniec gry',
+    'Stay' : 'Pozostań'
     
 };
 
