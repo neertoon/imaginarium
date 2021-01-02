@@ -62,37 +62,10 @@
                 </div>
                 <div id="player-cards">
                 </div>
+                <div id="snackbar">Some text some message..</div>
           
         
-                  <!--
-                  <i class="f-question-1 fas fa-question"></i>
-                  <i class="f-question-2 fas fa-question"></i>
-                  <i class="f-question-3 fas fa-question"></i>
-                  <i class="f-question-4 fas fa-question"></i>
-                  <i class="f-question-5 fas fa-question"></i>
-                  <i class="f-question-6 fas fa-question"></i>
-                  <i class="f-question-7 fas fa-question"></i>
-                  <i class="f-question-8 fas fa-question"></i>
-                  <i class="f-question-9 fas fa-question"></i>
-                  <i class="f-question-10 fas fa-question"></i>
-                  <i class="f-question-11 fas fa-question"></i>
-                  <i class="f-question-12 fas fa-question"></i>
-                  <i class="f-question-13 fas fa-question"></i>
-                  <i class="f-question-14 fas fa-question"></i>
-                  <i class="f-question-15 fas fa-question"></i>
-                  <i class="f-question-16 fas fa-question"></i>
-                  <i class="f-question-17 fas fa-question"></i>
-                  <i class="f-question-18 fas fa-question"></i>
-        
-                  <i class="f-unlock-1 fas fa-unlock-alt"></i>
-                  <i class="f-unlock-2 fas fa-unlock-alt"></i>
-                  <i class="f-unlock-3 fas fa-unlock-alt"></i>
-                  <i class="f-unlock-4 fas fa-unlock-alt"></i>
-                  <i class="f-unlock-5 fas fa-unlock-alt"></i>
-                  <i class="f-unlock-6 fas fa-unlock-alt"></i>
-        
-                  <i class="f-eye-1 fas fa-eye"></i>
-                  -->
+                  
               </div>
         
               <div class="imaginarium-actions">
@@ -103,6 +76,8 @@
                   <p id="wait-label" class="btn btn-action-bottom" style="display:none;">Wait for other players</p>
                   <input id="selected-card-index" type="hidden" value="" />
               </div>
+              
+              <div id="sweet-alert-target" ></div>
           </div>
     
           <div id="game-users-area" class="d-none d-md-block col-md-3">
@@ -130,7 +105,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.9.3/qs.min.js" integrity="sha256-lSPkSu/D04IeqWOhTgTf5tLzNFEc37oNE9ysGS9PdK4=" crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="/socket.io/socket.io.js"></script>  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="js/translator.js"></script>
   <script src="js/main.js"></script>
 </body>

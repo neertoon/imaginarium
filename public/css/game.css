@@ -424,206 +424,66 @@ body {
 }
 
 
-.f-question-1 {
-    font-size: 36px;
-    position: absolute;
-    top: 4%;
-    left: 24%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-2 {
-    font-size: 36px;
-    position: absolute;
-    top: 9%;
-    left: 8%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-3 {
-    font-size: 36px;
-    position: absolute;
-    top: 8%;
-    left: 50%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-4 {
-    font-size: 52px;
-    position: absolute;
-    top: 14%;
-    left: 23%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-5 {
-    font-size: 46px;
-    position: absolute;
-    top: 17%;
-    left: 76%;
-    color: rgba(215, 189, 55, 0.69);
-}
-
-.f-question-6 {
-    font-size: 36px;
-    position: absolute;
-    top: 23%;
-    left: 31%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-7 {
-    font-size: 28px;
-    position: absolute;
-    top: 23%;
-    left: 82%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-8 {
-    font-size: 52px;
-    position: absolute;
-    top: 31%;
-    left: 74%;
-    color: rgba(215, 189, 55, 0.79);
-}
-
-.f-question-9 {
-    font-size: 30px;
-    position: absolute;
-    top: 35%;
-    left: 41%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-10 {
-    font-size: 36px;
-    position: absolute;
-    top: 42%;
-    left: 54%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-11 {
-    font-size: 36px;
-    position: absolute;
-    top: 49%;
-    left: 12%;
-    color: rgba(215, 189, 55, 0.59);
-}
-
-.f-question-12 {
-    font-size: 51px;
-    position: absolute;
-    top: 55%;
-    left: 64%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-13 {
-    font-size: 28px;
-    position: absolute;
-    top: 61%;
-    left: 90%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-14 {
-    font-size: 32px;
-    position: absolute;
-    top: 68%;
-    left: 22%;
-    color: rgba(215, 189, 55, 0.29);
-}
-
-.f-question-15 {
-    font-size: 28px;
-    position: absolute;
-    top: 72%;
-    left: 75%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-16 {
-    font-size: 41px;
-    position: absolute;
-    top: 78%;
-    left: 19%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-question-17 {
-    font-size: 32px;
-    position: absolute;
-    top: 85%;
-    left: 56%;
-    color: rgba(215, 189, 55, 0.49);
-}
-
-.f-question-18 {
-    font-size: 52px;
-    position: absolute;
-    top: 90%;
-    left: 35%;
-    color: rgba(215, 189, 55, 0.39);
-}
-
-.f-unlock-1 {
-    font-size: 28px;
-    position: absolute;
-    top: 16%;
-    left: 10%;
-    color: rgba(99, 170, 19, 0.19);
-}
-
-.f-unlock-2 {
-    font-size: 32px;
-    position: absolute;
-    top: 22%;
-    left: 55%;
-    color: rgba(99, 170, 19, 0.29);
-}
-
-.f-unlock-3 {
-    font-size: 42px;
-    position: absolute;
-    top: 32%;
-    left: 16%;
-    color: rgba(99, 170, 19, 0.19);
-}
-
-.f-unlock-4 {
-    font-size: 36px;
-    position: absolute;
-    top: 50%;
-    left: 45%;
-    color: rgba(99, 170, 19, 0.29);
-}
-
-.f-unlock-5 {
-    font-size: 46px;
-    position: absolute;
-    top: 64%;
-    left: 65%;
-    color: rgba(99, 170, 19, 0.29);
-}
-
-.f-unlock-6 {
-    font-size: 36px;
-    position: absolute;
-    top: 84%;
-    left: 15%;
-    color: rgba(99, 170, 19, 0.29);
-}
-
-.f-eye-1 {
-    font-size: 36px;
-    position: absolute;
-    top: 5%;
-    left: 82%;
-    color: rgba(233, 155, 53, 0.32);
-}
 
 .disable-dbl-tap-zoom {
     touch-action: manipulation;
   }
+  
+  #sweet-alert-target .swal2-container {
+    position:inherit;
+}
+
+#sweet-alert-target{
+    width: 100%;
+        height: 100%;            
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: none;
+}
+   /* The snackbar - position it at the bottom and in the middle of the screen */
+#snackbar {
+    visibility: hidden; /* Hidden by default. Visible on click */
+    min-width: 300px; /* Set a default minimum width */
+    margin-left: -150px; /* Divide value of min-width by 2 */
+    background-color: #333; /* Black background color */
+    color: #fff; /* White text color */
+    text-align: center; /* Centered text */
+    border-radius: 2px; /* Rounded borders */
+    padding: 3px; /* Padding */
+    position: absolute; /* Sit on top of the screen */
+    z-index: 99999; /* Add a z-index if needed */
+    left: 50%; /* Center the snackbar */
+    top: 15%; /* 30px from the bottom */
+  }
+  
+  /* Show the snackbar when clicking on a button (class added with JavaScript) */
+  #snackbar.show {
+    visibility: visible; /* Show the snackbar */
+    /* Add animation: Take 0.5 seconds to fade in and out the snackbar.
+    However, delay the fade out process for 2.5 seconds */
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+  }
+  
+  /* Animations to fade the snackbar in and out */
+  @-webkit-keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 15%; opacity: 1;}
+  }
+  
+  @keyframes fadein {
+    from {top: 0; opacity: 0;}
+    to {top: 15%; opacity: 1;}
+  }
+  
+  @-webkit-keyframes fadeout {
+    from {top: 15%; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  }
+  
+  @keyframes fadeout {
+    from {top: 15%; opacity: 1;}
+    to {top: 0; opacity: 0;}
+  } 

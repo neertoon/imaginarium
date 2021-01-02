@@ -37,18 +37,28 @@ socket.on('message', message => {
     }
 });
 
-socket.on('gameError', message => {
+socket.on('gameError', async message => {
     serverResponseCheckId = null;
     console.log(message.text);
     setCookie('iduserb', '', -1);
-    alert(trnslt(message.text));
+    $("#sweet-alert-target").css("display","block");
+    await Swal.fire({
+        html: trnslt(message.text),
+        icon: 'error',
+        confirmButtonText: 'OK',
+        target: document.getElementById('sweet-alert-target')
+      });
     window.location = '/';
 });
 
 socket.on('gameWarning', message => {
     serverResponseCheckId = null;
-    alert(trnslt(message.text));
-    
+
+    var x = document.getElementById("snackbar");
+    x.innerHTML = trnslt(message.text);
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+
     if (message.hasOwnProperty('phase')) {
         if (message.phase === 'voting') {
             $('#btnVoteForCard').show();
@@ -58,11 +68,10 @@ socket.on('gameWarning', message => {
     }
 });
 
-socket.on('summary', summaryJson => {
+socket.on('summary', async summaryJson => {
     serverResponseCheckId = null;
     let summaryObject = JSON.parse(summaryJson);
     
-    var winners = summaryObject.cardOwners.filter(player => player.points > 29);
     
     let storyTellerCard = $($('#player-cards').children()[summaryObject.storyTellerCardIndex]);
     storyTellerCard.addClass('correct-card');
@@ -86,29 +95,9 @@ socket.on('summary', summaryJson => {
     }
 
     setSpotlightCards(selectedCard);
-
+    let winners = summaryObject.cardOwners.filter(player => player.points > 29);
     if (winners.length > 0) {
-        let endingAlertString = trnslt('Winner/s: ')+winners.map(function(elem){
-            return elem.name;
-        }).join(", ");
-        endingAlertString += '\r\n\r\n';
-        endingAlertString += trnslt('Last round: ')+ '\r\n' + summaryAlert(summaryObject);        
-        endingAlertString += '\r\n\r\n';
-        summaryObject.endGamePlayersList.sort(function(a, b) {
-            if(a.points < b.points){
-                return 1;
-            }else if(a.points > b.points){
-                return -1;
-            }else{
-                return 0;
-            }
-        });
-        endingAlertString += trnslt('Results: ')+ '\r\n' + summaryObject.endGamePlayersList.map(function(player){
-            return player.username + ': ' + player.points;
-        }).join("\r\n");
-        leaveServerRoom();
-        alert(endingAlertString);
-        window.location = '/';
+        await gameFinish(winners, summaryObject);
     }
 });
 
@@ -178,16 +167,50 @@ chatForm.addEventListener('submit', (e) => {
     e.target.elements.msg.focus();
 });
 
+async function gameFinish(winners, summaryObject) {
+    let endingAlertString = '';
+    if(false){
+        endingAlertString += trnslt('Winner/s: ') + winners.map(function (elem) {
+            return elem.name;
+        }).join(", ");
+    }
+    endingAlertString += '<b>';
+    endingAlertString += trnslt('Last round: ') + '</b><br/>' + summaryAlert(summaryObject);
+    endingAlertString += '<br/><br/><b>';
+    summaryObject.endGamePlayersList.sort(function (a, b) {
+        if (a.points < b.points) {
+            return 1;
+        } else if (a.points > b.points) {
+            return -1;
+        } else {
+            return 0;
+        }
+    });
+    endingAlertString += trnslt('Results: ') + '</b><br/>' + summaryObject.endGamePlayersList.map(function (player) {
+        return player.username + ': ' + player.points;
+    }).join("<br/>");
+    leaveServerRoom();
+    $("#sweet-alert-target").css("display","block");
+    await Swal.fire({
+        title: trnslt('Game over'),
+        html: endingAlertString,
+        icon: 'success',
+        confirmButtonText: 'OK',
+        target: document.getElementById('sweet-alert-target')
+    });
+    window.location = '/';
+}
+
 function summaryAlert(summaryObject) {
     let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
     let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
-    resultString += '\r\n' + trnslt('Incorrect votes: ');
+    resultString += '<br/>' + trnslt('Incorrect votes: ');
     let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
     incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
     let previousVoteTarget = null;
     for (const incorrectPlayer of incorrectPlayers) {
         if (previousVoteTarget != incorrectPlayer.voteName) {
-            resultString += '\r\n';
+            resultString += '<br/>';
             resultString += incorrectPlayer.voteName + trnslt(' got vote from: ');
         }
         resultString += incorrectPlayer.name + ', ';
@@ -305,8 +328,24 @@ function leaveServerRoom(){
 }
 
 function userDoorClick(){
-    if(confirm(trnslt("Are you sure? After the game has started you won't be able to rejoin until it ends!"))){
+    let cards = $($('#player-cards').children());
+    if(cards.length == 0){
         Game.leave();
+    }
+    else{
+        $("#sweet-alert-target").css("display","block");
+        Swal.fire({
+            html: trnslt("Are you sure? You won't be able to rejoin until game ends!"),
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            showCancelButton: true,
+            cancelButtonText: trnslt('Stay'),
+            target: document.getElementById('sweet-alert-target')
+        }).then((result) => {
+            $("#sweet-alert-target").css("display","none");
+            if (result.isConfirmed) {
+                Game.leave();
+            }});
     }
 }
 
@@ -314,9 +353,15 @@ function setServerResponseCheckId(){
     let currentId = getRandomInt(1,999999)
     serverResponseCheckId = currentId;
 
-    setTimeout(function(){ 
+    setTimeout(async function(){ 
         if(currentId == serverResponseCheckId){
-            alert(trnslt("Server didn't receive your action. Reloading!")); 
+            $("#sweet-alert-target").css("display","block");
+            await Swal.fire({
+                text: trnslt("Server didn't receive your action. Reloading!"),
+                icon: 'warning',
+                confirmButtonText: 'OK',
+                target: document.getElementById('sweet-alert-target')
+              });
             location.reload();
         }
         else
