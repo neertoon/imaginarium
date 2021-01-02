@@ -51,11 +51,12 @@ socket.on('gameError', async message => {
 
 socket.on('gameWarning', message => {
     serverResponseCheckId = null;
-    Swal.fire({
-        html: trnslt(message.text),
-        icon: 'warning',
-        confirmButtonText: 'OK'
-      });
+
+    var x = document.getElementById("snackbar");
+    x.innerHTML = trnslt(message.text);
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+
     if (message.hasOwnProperty('phase')) {
         if (message.phase === 'voting') {
             $('#btnVoteForCard').show();
