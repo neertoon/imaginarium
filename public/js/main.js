@@ -1,6 +1,6 @@
-const chatForm = document.getElementById('chat-form');
-const chatMessages = document.querySelector('.chat-messages');
-const roomName = document.getElementById('room-name');
+//const chatForm = document.getElementById('chat-form');
+//const chatMessages = document.querySelector('.chat-messages');
+// const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
 let serverResponseCheckId = null;
@@ -21,7 +21,7 @@ socket.emit('joinRoom', {
 
 socket.on('roomUsers', ({ room, users, isHost }) => {
     serverResponseCheckId = null;
-    outputRoomName(room);
+    //outputRoomName(room);
     
     outputUsers(users, isHost);
 });
@@ -30,7 +30,7 @@ socket.on('message', message => {
     serverResponseCheckId = null;
     outputMessage(message);
 
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    //chatMessages.scrollTop = chatMessages.scrollHeight;
 
     if (!getCookie('iduserb') && message.text === 'Welcome to The Game') {
         setCookie('iduserb', socket.json.id, 1);
@@ -155,17 +155,17 @@ socket.on('gameCardsPack', cardsPack => {
     preventTooHighSpotlight();
 });
 
-chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+// chatForm.addEventListener('submit', (e) => {
+//     e.preventDefault();
     
-    const msg = e.target.elements.msg.value;
+//     const msg = e.target.elements.msg.value;
 
-    // Emit message to server
-    socket.emit('chatMessage', msg);
+//     // Emit message to server
+//     socket.emit('chatMessage', msg);
     
-    e.target.elements.msg.value = '';
-    e.target.elements.msg.focus();
-});
+//     e.target.elements.msg.value = '';
+//     e.target.elements.msg.focus();
+// });
 
 async function gameFinish(winners, summaryObject) {
     let endingAlertString = '';
@@ -220,18 +220,12 @@ function summaryAlert(summaryObject) {
 }
 
 function outputMessage(message) {
-    const div = document.createElement('div');
-    div.classList.add('message');
-    div.innerHTML = `<p class="meta">${message.userName} <span>${message.time}</span></p>
-<p class="text">
-    ${message.text}
-</p>`;
-    document.querySelector('.chat-messages').appendChild(div);
+    console.log(message.text);
 }
 
-function outputRoomName(room) {
-    roomName.innerText = room;
-}
+// function outputRoomName(room) {
+//     roomName.innerText = room;
+// }
 
 function outputUsers(users, isHost) {
     for (let index in users) {

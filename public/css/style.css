@@ -38,7 +38,7 @@ a {
 	font-size: 17px;
 }
 
-/* Chat Page */
+/* Chat Page
 
 .chat-container {
 	max-width: 1100px;
@@ -83,9 +83,9 @@ a {
 
 .chat-sidebar ul li {
 	padding: 10px 0;
-}
+} */
 
-.chat-messages {
+/* .chat-messages {
 	padding: 30px;
 	max-height: 500px;
 	overflow-y: scroll;
@@ -124,7 +124,7 @@ a {
 	padding: 5px;
 	height: 40px;
 	flex: 1;
-}
+} */
 
 /* Join Page */
 .join-container {
