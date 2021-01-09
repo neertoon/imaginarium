@@ -309,7 +309,8 @@ const Game = {
     },
     leave :function() {
         leaveServerRoom();
-        window.location = '/';
+        console.log("WINDOW LOCATION");
+        //TODO: tutaj przywrocic
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
