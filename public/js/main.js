@@ -309,8 +309,7 @@ const Game = {
     },
     leave :async function() {
         await leaveServerRoom();
-        //TODO: tutaj przywrocic
-        //window.location = '/';
+        window.location = '/';
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
@@ -319,9 +318,7 @@ const Game = {
 
 async function leaveServerRoom(){
     setCookie('iduserb', '', -1);
-    console.time('emitowanieLeaveRoom');
     await socket.emit('leaveRoom', 'ok',);
-    console.timeEnd('emitowanieLeaveRoom');
 }
 
 async function userDoorClick(){
