@@ -20,6 +20,7 @@ const plKeys = {
     "Wait for other players":'Poczekaj na innych graczy',
     "Players":'Gracze',
     "Voting":'Głosowanie',
+    "Voting (two cards mode)":'Głosowanie (tryb dwóch kart)',
     "Summary":'Podsumowanie',
     "Tell your story to others and pick a card":'Opowiedz innym swoją historię i wybierz kartę',
     "Listen to player ":'Posłuchaj gracza ',
@@ -47,7 +48,9 @@ const plKeys = {
     'Last round: ' : 'Ostatnia runda: ',
     'Results: ' : 'Tabela wyników: ',
     'Game over' : 'Koniec gry',
-    'Stay' : 'Pozostań'
+    'Stay' : 'Pozostań',
+    'Give up your vote for another card' : 'Zrezygnuj z głosu na inną kartę',
+    'Vote for another card' : 'Zagłosuj na inną kartę'
     
 };
 

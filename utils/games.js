@@ -279,7 +279,7 @@ var GamesData = {
                     if(!player.votedCardsArray.some(index => { index != storyTeller.pickedCardIndex })){
                         continue;
                     }
-                    player.votedCardsArray.filter(index => { index != storyTeller.pickedCardIndex }).forEach((missedIndex)=>{
+                    for(let missedIndex of player.votedCardsArray.filter(index => { index != storyTeller.pickedCardIndex })){
                         let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === missedIndex);
                         summaryObject.votes.push({name:player.username, voteIndexes: player.votedCardsArray});
                         if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
@@ -291,7 +291,7 @@ var GamesData = {
                         playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
                         let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === playerToGetAnotherPoints.id);
                         summaryPlayer.scored += 1;
-                    });
+                    }
                 }
             }
             

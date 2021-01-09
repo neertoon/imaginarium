@@ -3,6 +3,8 @@
 // const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
+const votingButton = $('#btnVoteForCard');
+let castedVotes = [];
 let gameVotesToCast = 0;
 let serverResponseCheckId = null;
 
@@ -124,6 +126,10 @@ socket.on('phase', message => {
         $('.game-item-showhide').hide();
         // $('#btnSetReady').hide();
         $('#game-area-info').html(trnslt('Voting'));
+        if(gameVotesToCast == 2){
+            $('#game-area-info').html(trnslt('Voting (two cards mode)'));
+            votingButton.html(trnslt('Vote for first card'));
+        }
         // $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
@@ -204,6 +210,7 @@ async function gameFinish(winners, summaryObject) {
 }
 
 function summaryAlert(summaryObject) {
+    return "";
     //TODO:voteIndex => voteIndexes
     //TODO:wywalone voteName
     let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndexes == 'votedOnStoryteller');
@@ -287,6 +294,16 @@ const Game = {
         $('.game-card').removeClass('selected');
         element.addClass('selected');
         setSpotlightCards(element);
+        if(votingButton.css('display') != 'none'){
+            if(castedVotes.length > 0){
+                if(value == castedVotes[0]){
+                    votingButton.html(trnslt('Give up your vote for another card'));
+                } else {
+                    votingButton.html(trnslt('Vote for another card'));
+                }
+
+            }
+        }
     },
     sendPickedCard : function(event, cardNumber) {
         event.preventDefault();
@@ -301,8 +318,14 @@ const Game = {
         setServerResponseCheckId();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
-        var element = $(event.target);
-        element.hide();
+        castedVotes.push(cardNumber);
+        if(castedVotes.length == gameVotesToCast){
+            var element = $(event.target);
+            element.hide();
+        }
+        else{
+            votingButton.html(trnslt('Give up your vote for another card'));
+        }
     },
     nextRound : function(event) {
         event.preventDefault();
@@ -526,7 +549,7 @@ $(function(){
 // #region translations
 $('#btnSetReady').html(trnslt('Set ready'));
 $('#btnChooseCard').html(trnslt('Select card'));
-$('#btnVoteForCard').html(trnslt('Vote'));
+//$('#btnVoteForCard').html(trnslt('Vote'));
 $('#btnSeenScoring').html(trnslt('Next round'));
 $('#wait-label').html(trnslt('Wait for other players'));
 $('#players-label').html(trnslt('Players'));
