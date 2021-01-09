@@ -198,11 +198,13 @@ function sendUsers(user, io) {
     var usersy = GamesData.getUsersForClient(user.room);
     var usersRoom = getRoomUsers(user.room);
     
+    var votesToCast = GamesData.getVotesToCast(user.room);
     for (let roomUser of usersRoom) {
         io.to(roomUser.socketId).emit('roomUsers', {
             room: user.room,
             users:usersy,
-            isHost: roomUser.isHost
+            isHost: roomUser.isHost,
+            votesToCast: votesToCast
         });   
     }
 }

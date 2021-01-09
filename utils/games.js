@@ -27,7 +27,10 @@ var GamesData = {
             hostId: -1,
             cardsForVoting: [],
             lastSummaryObject:{},
+            votesToCast: 1
         };
+        if(room == "Sosnowiec" ||room == "MatkiZDzieckiem" ||room == "Poznan")
+            game.votesToCast = 2;
         let cards = await loadCardsListFromDirectory();
         shuffle(cards);
         game.cardsToUse = cards;
@@ -160,6 +163,14 @@ var GamesData = {
         }
         
         return publicUsers;
+    },
+    
+    getVotesToCast: function(room) {
+        const game = games.find(game => game.room === room);
+        if (!game || game.players.length === 0) {
+            return 0;
+        }
+        return game.votesToCast;
     },
     
     userLeave: async function(room, id, io) {

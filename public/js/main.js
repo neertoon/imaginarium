@@ -3,6 +3,7 @@
 // const roomName = document.getElementById('room-name');
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
+let gameVotesToCast = 0;
 let serverResponseCheckId = null;
 
 // Get user and room from URL
@@ -19,10 +20,10 @@ socket.emit('joinRoom', {
     password
 });
 
-socket.on('roomUsers', ({ room, users, isHost }) => {
+socket.on('roomUsers', ({ room, users, isHost, votesToCast }) => {
     serverResponseCheckId = null;
     //outputRoomName(room);
-    
+    gameVotesToCast = votesToCast;
     outputUsers(users, isHost);
 });
 
