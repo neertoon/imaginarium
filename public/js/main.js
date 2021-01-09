@@ -343,7 +343,7 @@ function userDoorClick(){
             showCancelButton: true,
             cancelButtonText: trnslt('Stay'),
             target: document.getElementById('sweet-alert-target')
-        }).then(async (result) => {
+        }).then((result) => {
             $("#sweet-alert-target").css("display","none");
             if (result.isConfirmed) {
                 Game.leave();
