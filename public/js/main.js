@@ -84,7 +84,8 @@ socket.on('summary', async summaryJson => {
         let curr = card.attr('alt');
         card.attr('alt', cardOwner.name+`<i>${cardOwner.scored}</i>`);
         
-        let votedCard = $(cards[cardOwner.cardVoted]);
+        let votedCards = $(cards[cardOwner.cardsVoted]);
+        //TODO: tu leciał indeks karty, a teraz idzie tablica indeksow
         var lastVoters = votedCard.data('voters');
         lastVoters = lastVoters ? lastVoters : '';
         lastVoters += `<span>${cardOwner.name}</span><br>`;
@@ -203,11 +204,13 @@ async function gameFinish(winners, summaryObject) {
 }
 
 function summaryAlert(summaryObject) {
-    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == 'votedOnStoryteller');
+    //TODO:voteIndex => voteIndexes
+    //TODO:wywalone voteName
+    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndexes == 'votedOnStoryteller');
     let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
     resultString += '<br/>' + trnslt('Incorrect votes: ');
-    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != 'votedOnStoryteller');
-    incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
+    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndexes != 'votedOnStoryteller');
+    incorrectPlayers.sort((a, b) => (a.voteIndexes > b.voteIndexes) ? 1 : -1);
     let previousVoteTarget = null;
     for (const incorrectPlayer of incorrectPlayers) {
         if (previousVoteTarget != incorrectPlayer.voteName) {

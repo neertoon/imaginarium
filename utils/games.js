@@ -126,7 +126,8 @@ var GamesData = {
 
             for (const playerIndex of game.players){
                 if (playerIndex.isStoryteller) {
-                    playerIndex.votedCardIndex = playerIndex.pickedCardIndex;
+                    for(let i = 0; i < game.votesToCast; i++)
+                        playerIndex.votedCardsArray.push(playerIndex.pickedCardIndex);
                     io.to(playerIndex.socketId).emit('phase', 'narrator');
                 } else {
                     playerIndex.selectedCard = false;    
@@ -203,8 +204,10 @@ var GamesData = {
         }
     },
     voteForCard(user, cardIndex, io) {
+        const room = user.room;
+        const game = games.find(game => game.room === room);
         cardIndex = parseInt(cardIndex);
-        if (user.votedCardIndex !== -1) {
+        if (user.votedCardsArray.length == game.votesToCast) {
             io.to(user.socketId).emit('gameWarning', {text: 'You already chose card for voting', phase: 'voting'});
             return false;
         }
@@ -214,14 +217,14 @@ var GamesData = {
             return false;
         }
 
-        const room = user.room;
-        const game = games.find(game => game.room === room);
 
+        if(user.votedCardsArray.length == game.votesToCast){
+            user.selectedCard = true;
+        }
 
-        user.selectedCard = true;
-        user.votedCardIndex = cardIndex;
+        user.votedCardsArray.push(cardIndex);
 
-        const usersThatVoted = game.players.filter(user => user.selectedCard === true);
+        const usersThatVoted = game.players.filter(user => user.votedCardsArray.length == game.votesToCast);
 
         if (game.players.length === usersThatVoted.length && game.phase === this.phaseVoting) {
             let summaryObject = { 
@@ -234,7 +237,7 @@ var GamesData = {
                 endGamePlayersList:[]
             };
             game.players.forEach(player=> {
-                summaryObject.cardOwners.push({id: player.id, name:player.username, cardIndex:player.pickedCardIndex, cardVoted: player.votedCardIndex, scored: 0});
+                summaryObject.cardOwners.push({id: player.id, name:player.username, cardIndex:player.pickedCardIndex, cardsVoted: player.votedCardsArray, scored: 0});
                 if(player.isStoryteller){
                     summaryObject.storyTellerCardIndex = player.pickedCardIndex;
                     summaryObject.storyTellerName = player.username;
@@ -242,8 +245,8 @@ var GamesData = {
             });
 
             const storyTeller = game.players.find(user => user.isStoryteller === true);
-            const playersThatFoundStorytellerCard = game.players.filter(userki => userki.votedCardIndex === storyTeller.pickedCardIndex);
-            const playersNotVotedForStoryteller = game.players.filter(userki => userki.votedCardIndex !== storyTeller.pickedCardIndex);
+            const playersThatFoundStorytellerCard = game.players.filter(userki => userki.votedCardsArray.some(function(index){ index == storyTeller.pickedCardIndex}));
+            const playersNotVotedForStoryteller = game.players.filter(userki => !userki.votedCardsArray.some(function(index){ index == storyTeller.pickedCardIndex}));
 
             if (playersThatFoundStorytellerCard.length === 1 || playersThatFoundStorytellerCard.length === game.players.length) {
                 for (const player of game.players){
@@ -260,26 +263,35 @@ var GamesData = {
                     summaryObject.allVotedOnStoryteller = true;
             } else {
                 for (const player of playersThatFoundStorytellerCard){
-                    player.points += 3;
+                    let pointsScored = 3;
+                    let firstVotedCard = player.votedCardsArray[0];
+                    if(!player.votedCardsArray.some(function(index){ index != firstVotedCard}) && !player.isStoryteller)
+                        pointsScored += 1;
                     let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === player.id);
-                    summaryPlayer.scored = 3;
+                    player.points += pointsScored;
+                    summaryPlayer.scored = pointsScored;
                     if(!player.isStoryteller)
-                        summaryObject.votes.push({name:player.username, voteIndex: 'votedOnStoryteller', voteName: storyTeller.username});
+                        summaryObject.votes.push({name:player.username, voteIndexes: 'votedOnStoryteller'});
                 }
                 
                 let playersWithExtaPoints = {};
-                for (const player of playersNotVotedForStoryteller) {
-                    let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === player.votedCardIndex);
-                    summaryObject.votes.push({name:player.username, voteIndex: player.votedCardIndex, voteName: summaryObject.cardOwners.find(x=>x.cardIndex == player.votedCardIndex).name});
-                    if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
-                        playersWithExtaPoints[playerToGetAnotherPoints.id] = 0;
-                    } else if (playersWithExtaPoints[playerToGetAnotherPoints.id] === 3) {
+                for (const player of game.players) {
+                    if(!player.votedCardsArray.some(index => { index != storyTeller.pickedCardIndex })){
                         continue;
                     }
-                    playerToGetAnotherPoints.points += 1;
-                    playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
-                    let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === playerToGetAnotherPoints.id);
-                    summaryPlayer.scored += 1;
+                    player.votedCardsArray.filter(index => { index != storyTeller.pickedCardIndex }).forEach((missedIndex)=>{
+                        let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === missedIndex);
+                        summaryObject.votes.push({name:player.username, voteIndexes: player.votedCardsArray});
+                        if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
+                            playersWithExtaPoints[playerToGetAnotherPoints.id] = 0;
+                        } else if (playersWithExtaPoints[playerToGetAnotherPoints.id] === 3) {
+                            continue;
+                        }
+                        playerToGetAnotherPoints.points += 1;
+                        playersWithExtaPoints[playerToGetAnotherPoints.id] += 1;
+                        let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === playerToGetAnotherPoints.id);
+                        summaryPlayer.scored += 1;
+                    });
                 }
             }
             
@@ -322,7 +334,7 @@ var GamesData = {
         }
 
         user.selectedCard = true;
-        user.votedCardIndex = -1;
+        user.votedCardsArray = [];
 
         const usersThatReady = game.players.filter(user => user.selectedCard === true);
 
@@ -353,7 +365,7 @@ var GamesData = {
         {
             player.selectedCard = false;
             player.pickedCardIndex = -1;
-            player.votedCardIndex = -1;
+            player.votedCardIndex = [];
             
             let cardsList = player.cards
             while(cardsList.length < 6)

@@ -12,7 +12,7 @@ function userJoin(id, username, room) {
         isReady : false,
         selectedCard: false,
         pickedCardIndex: -1,
-        votedCardIndex: -1,
+        votedCardsArray: [],
         points: 0,
         isHost: roomUser.length === 0,
         isStoryteller: false,
