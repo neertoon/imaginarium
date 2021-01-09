@@ -4,7 +4,7 @@
 const usersList = document.getElementById('users');
 const userTable = $('#game-user-table');
 const votingButton = $('#btnVoteForCard');
-let castedVotes = [];
+let votedCardsArray = [];
 let gameVotesToCast = 0;
 let serverResponseCheckId = null;
 
@@ -37,6 +37,13 @@ socket.on('message', message => {
 
     if (!getCookie('iduserb') && message.text === 'Welcome to The Game') {
         setCookie('iduserb', socket.json.id, 1);
+    }
+});
+socket.on('votedCards', sourceVotedCards => {
+    votedCardsArray = sourceVotedCards.votedCardsArray;
+    gameVotesToCast = sourceVotedCards.votesToCast;
+    if(sourceVotedCards.votingPhase){
+        setVoteButton();
     }
 });
 
@@ -87,11 +94,12 @@ socket.on('summary', async summaryJson => {
         card.attr('alt', cardOwner.name+`<i>${cardOwner.scored}</i>`);
         
         let votedCards = $(cards[cardOwner.cardsVoted]);
+
         //TODO: tu leciał indeks karty, a teraz idzie tablica indeksow
-        var lastVoters = votedCard.data('voters');
-        lastVoters = lastVoters ? lastVoters : '';
-        lastVoters += `<span>${cardOwner.name}</span><br>`;
-        votedCard.data('voters', lastVoters);
+        // var lastVoters = votedCard.data('voters');
+        // lastVoters = lastVoters ? lastVoters : '';
+        // lastVoters += `<span>${cardOwner.name}</span><br>`;
+        // votedCard.data('voters', lastVoters);
 
         if(card.hasClass('selected')) {
             selectedCard = card;    
@@ -127,9 +135,10 @@ socket.on('phase', message => {
         // $('#btnSetReady').hide();
         $('#game-area-info').html(trnslt('Voting'));
         if(gameVotesToCast == 2){
-            $('#game-area-info').html(trnslt('Voting (two cards mode)'));
-            votingButton.html(trnslt('Vote for first card'));
+        $('#game-area-info').html(trnslt('Voting (two cards mode)'));
         }
+        setVoteButton();
+        
         // $('#btnChooseCard').hide();
         $('#btnVoteForCard').show();
     } else if (message == 'scoring') {
@@ -174,6 +183,34 @@ socket.on('gameCardsPack', cardsPack => {
 //     e.target.elements.msg.value = '';
 //     e.target.elements.msg.focus();
 // });
+
+function setVoteButton(){
+    if(gameVotesToCast == votedCardsArray.length){
+        votingButton.hide();
+        return;
+    }
+    votingButton.show();
+    if(gameVotesToCast == 1){
+        votingButton.html(trnslt('Vote'));
+        return;
+    }
+    if(gameVotesToCast > 1 && votedCardsArray.length == 0){
+        votingButton.html(trnslt('Vote for first card'));
+        return;
+    }
+    if(gameVotesToCast > 1 && votedCardsArray.length > 0){
+        let selectedCardIndex = $('#selected-card-index').val();
+        if(votedCardsArray.length > 0){
+            if(selectedCardIndex == votedCardsArray[0]){
+                votingButton.html(trnslt('Give up your vote for another card'));
+            } else {
+                votingButton.html(trnslt('Vote for another card'));
+            }
+        } else {
+            votingButton.html(trnslt('Vote for first card'));
+        }
+    }
+}
 
 async function gameFinish(winners, summaryObject) {
     let endingAlertString = '';
@@ -295,14 +332,7 @@ const Game = {
         element.addClass('selected');
         setSpotlightCards(element);
         if(votingButton.css('display') != 'none'){
-            if(castedVotes.length > 0){
-                if(value == castedVotes[0]){
-                    votingButton.html(trnslt('Give up your vote for another card'));
-                } else {
-                    votingButton.html(trnslt('Vote for another card'));
-                }
-
-            }
+            setVoteButton();
         }
     },
     sendPickedCard : function(event, cardNumber) {
@@ -318,14 +348,8 @@ const Game = {
         setServerResponseCheckId();
         socket.emit('gameVote', cardNumber);
         console.log('You vote card '+cardNumber);
-        castedVotes.push(cardNumber);
-        if(castedVotes.length == gameVotesToCast){
-            var element = $(event.target);
-            element.hide();
-        }
-        else{
-            votingButton.html(trnslt('Give up your vote for another card'));
-        }
+        votedCardsArray.push(cardNumber);
+        setVoteButton();
     },
     nextRound : function(event) {
         event.preventDefault();

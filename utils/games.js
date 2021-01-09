@@ -209,11 +209,13 @@ var GamesData = {
         cardIndex = parseInt(cardIndex);
         if (user.votedCardsArray.length == game.votesToCast) {
             io.to(user.socketId).emit('gameWarning', {text: 'You already chose card for voting', phase: 'voting'});
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase: true});
             return false;
         }
 
         if (user.pickedCardIndex === cardIndex) {
             io.to(user.socketId).emit('gameWarning', {text: 'You cannot vote for your card', phase: 'voting'});
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase: true});
             return false;
         }
 
@@ -223,6 +225,7 @@ var GamesData = {
         }
 
         user.votedCardsArray.push(cardIndex);
+        io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase: true});
 
         const usersThatVoted = game.players.filter(user => user.votedCardsArray.length == game.votesToCast);
 
@@ -365,7 +368,7 @@ var GamesData = {
         {
             player.selectedCard = false;
             player.pickedCardIndex = -1;
-            player.votedCardIndex = [];
+            player.votedCardsArray = [];
             
             let cardsList = player.cards
             while(cardsList.length < 6)
@@ -429,16 +432,20 @@ var GamesData = {
         
         if (game.phase == this.phasePickingCard) {
             io.to(user.socketId).emit('phase', 'selectCard');
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase:false});
             io.to(user.socketId).emit('gameCardsPack', user.cards);
             io.to(user.socketId).emit('phase', user.isStoryteller ? 'narrator' : ('someoneElseNarrator:' + game.players.find(x=>x.isStoryteller).username));
         } else if (game.phase == this.phaseVoting) {
             io.to(user.socketId).emit('phase', 'voting');
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase:true});
             io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
         } else if (game.phase == this.phaseScore) {
             io.to(user.socketId).emit('phase', 'scoring');
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase:false});
             await io.to(user.socketId).emit('gameCardsPack', game.cardsForVoting);
             io.to(user.socketId).emit('summary', JSON.stringify(game.lastSummaryObject));
         } else if (game.phase <= this.phaseSettingReady) {
+            io.to(user.socketId).emit('votedCards', {votedCardsArray: user.votedCardsArray, votesToCast: game.votesToCast, votingPhase:false});
             if (user.isReady) {
                 io.to(user.socketId).emit('phase', 'readyOn');
             } else {
