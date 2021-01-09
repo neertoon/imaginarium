@@ -307,25 +307,27 @@ const Game = {
         var element = $(event.target);
         element.hide();
     },
-    leave :function() {
-        leaveServerRoom();
-        console.log("WINDOW LOCATION");
+    leave :async function() {
+        await leaveServerRoom();
         //TODO: tutaj przywrocic
+        //window.location = '/';
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
     }
 };
 
-function leaveServerRoom(){
+async function leaveServerRoom(){
     setCookie('iduserb', '', -1);
-    socket.emit('leaveRoom', 'ok');
+    console.time('emitowanieLeaveRoom');
+    await socket.emit('leaveRoom', 'ok',);
+    console.timeEnd('emitowanieLeaveRoom');
 }
 
-function userDoorClick(){
+async function userDoorClick(){
     let cards = $($('#player-cards').children());
     if(cards.length == 0){
-        Game.leave();
+        await Game.leave();
     }
     else{
         $("#sweet-alert-target").css("display","block");
@@ -336,10 +338,10 @@ function userDoorClick(){
             showCancelButton: true,
             cancelButtonText: trnslt('Stay'),
             target: document.getElementById('sweet-alert-target')
-        }).then((result) => {
+        }).then(async (result) => {
             $("#sweet-alert-target").css("display","none");
             if (result.isConfirmed) {
-                Game.leave();
+                await Game.leave();
             }});
     }
 }
