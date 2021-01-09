@@ -189,7 +189,7 @@ async function gameFinish(winners, summaryObject) {
     endingAlertString += trnslt('Results: ') + '</b><br/>' + summaryObject.endGamePlayersList.map(function (player) {
         return player.username + ': ' + player.points;
     }).join("<br/>");
-    leaveServerRoom();
+    leaveServerRoom(false);
     $("#sweet-alert-target").css("display","block");
     await Swal.fire({
         title: trnslt('Game over'),
@@ -307,24 +307,32 @@ const Game = {
         var element = $(event.target);
         element.hide();
     },
-    leave :async function() {
-        await leaveServerRoom();
-        window.location = '/';
+    leave :function() {
+        leaveServerRoom(true);
     },
     deleteUser: function(idUser) {
         socket.emit('kickOut', idUser);
     }
 };
 
-async function leaveServerRoom(){
+function leaveServerRoom(exitBrowserPage){
     setCookie('iduserb', '', -1);
-    await socket.emit('leaveRoom', 'ok',);
+    if(exitBrowserPage){
+        socket.emit('leaveRoom', 'ok', function(){
+            window.location = '/';
+        });
+    }
+    else{
+        socket.emit('leaveRoom', 'ok', function(){
+            
+        });
+    }
 }
 
-async function userDoorClick(){
+function userDoorClick(){
     let cards = $($('#player-cards').children());
     if(cards.length == 0){
-        await Game.leave();
+        Game.leave();
     }
     else{
         $("#sweet-alert-target").css("display","block");
@@ -338,7 +346,7 @@ async function userDoorClick(){
         }).then(async (result) => {
             $("#sweet-alert-target").css("display","none");
             if (result.isConfirmed) {
-                await Game.leave();
+                Game.leave();
             }});
     }
 }

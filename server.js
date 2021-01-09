@@ -72,7 +72,7 @@ io.on('connection', socket => {
         sendUsers(user, io);
     });
 
-    socket.on('leaveRoom', () => {
+    socket.on('leaveRoom', (data, userBrowserCallback) => {
         const user = userLeave(actualUserId);
 
         if (user) {
@@ -81,6 +81,7 @@ io.on('connection', socket => {
             sendUsers(user, io);
 
             io.to(user.room).emit('message', formatMessage(serverName, `${user.username} has left The Game (but we dont know if he will return)`));
+            userBrowserCallback();
         }
     });
 
