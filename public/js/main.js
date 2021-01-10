@@ -92,17 +92,25 @@ socket.on('summary', async summaryJson => {
         let card = $(cards[cardOwner.cardIndex]);
         let curr = card.attr('alt');
         card.attr('alt', cardOwner.name+`<i>${cardOwner.scored}</i>`);
-        
-        let votedCards = $(cards[cardOwner.cardsVoted]);
+        let clearShotApplied = false;
+        let clearShot = !cardOwner.cardsVoted.some(x=> x != cardOwner.cardsVoted[0]) && gameVotesToCast > 1;
+        for(const cardVotedIndex of cardOwner.cardsVoted){
+            if(clearShotApplied || summaryObject.storyTellerName == cardOwner.name){
+                continue;
+            }
+            let votedCard = $(cards[cardVotedIndex]);
 
-        //TODO: tu leciał indeks karty, a teraz idzie tablica indeksow
-        // var lastVoters = votedCard.data('voters');
-        // lastVoters = lastVoters ? lastVoters : '';
-        // lastVoters += `<span>${cardOwner.name}</span><br>`;
-        // votedCard.data('voters', lastVoters);
+            var lastVoters = votedCard.data('voters');
+            lastVoters = lastVoters ? lastVoters : '';
+            lastVoters += `<span>${cardOwner.name}${clearShot ? " -  " + trnslt('clear shot'):''}</span><br>`;
+            votedCard.data('voters', lastVoters);
 
-        if(card.hasClass('selected')) {
-            selectedCard = card;    
+            if(card.hasClass('selected')) {
+                selectedCard = card;    
+            }
+            if(clearShot){
+                clearShotApplied = true;
+            }
         }
     }
 

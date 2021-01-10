@@ -51,7 +51,8 @@ const plKeys = {
     'Stay' : 'Pozostań',
     'Give up your vote for another card' : 'Zrezygnuj z głosu na inną kartę',
     'Vote for first card' : 'Zagłosuj na pierwszą kartę',
-    'Vote for another card' : 'Zagłosuj na inną kartę'
+    'Vote for another card' : 'Zagłosuj na inną kartę',
+    'clear shot' : 'czysty strzał'
     
 };
 
