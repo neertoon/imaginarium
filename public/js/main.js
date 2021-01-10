@@ -228,7 +228,7 @@ async function gameFinish(winners, summaryObject) {
         }).join(", ");
     }
     endingAlertString += '<b>';
-    endingAlertString += trnslt('Last round: ') + '</b><br/>' + summaryAlert(summaryObject);
+    endingAlertString += trnslt('Last round: ') + '</b><br/>' + lastRoundTextSummary(summaryObject);
     endingAlertString += '<br/><br/><b>';
     summaryObject.endGamePlayersList.sort(function (a, b) {
         if (a.points < b.points) {
@@ -254,15 +254,12 @@ async function gameFinish(winners, summaryObject) {
     window.location = '/';
 }
 
-function summaryAlert(summaryObject) {
-    return "";
-    //TODO:voteIndex => voteIndexes
-    //TODO:wywalone voteName
-    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndexes == 'votedOnStoryteller');
+function lastRoundTextSummary(summaryObject) {
+    let correctPlayers = summaryObject.votes.filter(vote => vote.voteIndex == summaryObject.storyTellerCardIndex);
     let resultString = trnslt('Correct votes: ') + correctPlayers.map(el => el.name).join(', ');
     resultString += '<br/>' + trnslt('Incorrect votes: ');
-    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndexes != 'votedOnStoryteller');
-    incorrectPlayers.sort((a, b) => (a.voteIndexes > b.voteIndexes) ? 1 : -1);
+    let incorrectPlayers = summaryObject.votes.filter(vote => vote.voteIndex != summaryObject.storyTellerCardIndex);
+    incorrectPlayers.sort((a, b) => (a.voteIndex > b.voteIndex) ? 1 : -1);
     let previousVoteTarget = null;
     for (const incorrectPlayer of incorrectPlayers) {
         if (previousVoteTarget != incorrectPlayer.voteName) {

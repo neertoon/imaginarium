@@ -273,18 +273,20 @@ var GamesData = {
                     let summaryPlayer = summaryObject.cardOwners.find(sPlayer => sPlayer.id === player.id);
                     player.points += pointsScored;
                     summaryPlayer.scored = pointsScored;
-                    if(!player.isStoryteller)
-                        summaryObject.votes.push({name:player.username, voteIndexes: 'votedOnStoryteller'});
                 }
                 
                 let playersWithExtaPoints = {};
                 for (const player of game.players) {
+                    if(!player.isStoryteller){
+                        for(const vote of player.votedCardsArray){
+                            summaryObject.votes.push({name:player.username, voteIndex: vote, voteName: summaryObject.cardOwners.find(x=>x.cardIndex == vote).name });
+                        }
+                    }
                     if(!player.votedCardsArray.some(index => index != storyTeller.pickedCardIndex)){
                         continue;
                     }
                     for(let missedIndex of player.votedCardsArray.filter(index => index != storyTeller.pickedCardIndex )){
                         let playerToGetAnotherPoints = game.players.find(user => user.pickedCardIndex === missedIndex);
-                        summaryObject.votes.push({name:player.username, voteIndexes: player.votedCardsArray});
                         if (!playersWithExtaPoints.hasOwnProperty(playerToGetAnotherPoints.id)) {
                             playersWithExtaPoints[playerToGetAnotherPoints.id] = 0;
                         } else if (playersWithExtaPoints[playerToGetAnotherPoints.id] === 3) {
@@ -296,6 +298,7 @@ var GamesData = {
                         summaryPlayer.scored += 1;
                     }
                 }
+                
             }
             
             var iter = 0;
