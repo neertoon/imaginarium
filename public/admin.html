@@ -57,12 +57,10 @@
 							processData: false,
 							contentType: false,
 							success: function (data) {
-								console.log('Submission was successful.');
 								alert(data.message);
 							},
 							error: function (data) {
-								console.log('An error occurred.');
-								alert(data);
+								alert('An error occurred.');
 							},
 						});
 					});

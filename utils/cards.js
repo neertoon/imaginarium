@@ -60,6 +60,9 @@ async function insertCardPackMethod(req, res){
             });
         } else {
             let zip = new admZip(req.files.zippack.data);
+            if(!fs.existsSync(imagesPath)){
+                fs.mkdirSync(imagesPath);
+            }
             let existingCards = await loadCardsListFromDirectory();
             let duplicatesList = [];
             zip.getEntries().forEach(zipEntry => {
@@ -75,7 +78,10 @@ async function insertCardPackMethod(req, res){
             });
         }
     } catch (err) {
-        res.status(500).send(err);
+        res.send({
+            status: false,
+            message: err.message
+        });
     }
  }
 
