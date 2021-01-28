@@ -6,4 +6,4 @@ WORKDIR /usr/src/service/
 RUN npm install
 
 # Expose the app port
-EXPOSE 3000
+EXPOSE 4001

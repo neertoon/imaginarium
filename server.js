@@ -22,7 +22,7 @@ app.use(fileUpload({
 
 
 const serverName = 'SERVER';
-// process.env.IPASSWORD = ''; //ODPAL TO NA LOKALU
+process.env.IPASSWORD = 'a'; //ODPAL TO NA LOKALU
 
 // Run when client connect 
 io.on('connection', socket => {
@@ -187,7 +187,7 @@ app.post('/clearAllCards', async (req, res) => {
 });
 
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4001;
 
 //KŚ tu był
 

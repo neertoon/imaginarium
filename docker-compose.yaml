@@ -7,4 +7,4 @@ services:
     working_dir: /usr/src/service/
     command: npm run dev
     ports:
-      - "3000:3000"
+      - "4001:4001"
